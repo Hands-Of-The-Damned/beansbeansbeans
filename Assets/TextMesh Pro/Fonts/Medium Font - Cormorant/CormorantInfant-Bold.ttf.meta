@@ -1,0 +1,28 @@
+fileFormatVersion: 2
+guid: 3b53fbcd703cbba48a2ac67d0d0873d8
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Cormorant Infant
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 00a01b4f6c90c7141b6a4f10b07194c6, type: 3}
+  - {fileID: 12800000, guid: 972a131c3e94cb94bba0433832065a12, type: 3}
+  - {fileID: 12800000, guid: 31076beba23fe7d45abb9efc310e0ad9, type: 3}
+  - {fileID: 12800000, guid: a9831e60675136144b0da0dcfe44f175, type: 3}
+  - {fileID: 12800000, guid: 176609da498b1ab4cbd4cc7ba335323f, type: 3}
+  - {fileID: 12800000, guid: 47d594d396d4e0f4abb858f91524e848, type: 3}
+  - {fileID: 12800000, guid: 29e40293dab92d545917ca7f884d0d46, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

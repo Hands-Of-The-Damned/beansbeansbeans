@@ -1,0 +1,27 @@
+fileFormatVersion: 2
+guid: 1f7c302c3b408424a8bcaf4268847e3b
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Martel
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 0031354c425c6a846ab140a5728f02e3, type: 3}
+  - {fileID: 12800000, guid: 2d15056a3e30cb847804d04862dad043, type: 3}
+  - {fileID: 12800000, guid: cc9e0b66ddc454745996e3165ebafa09, type: 3}
+  - {fileID: 12800000, guid: f3200f81637d8804c997fd77a052eca4, type: 3}
+  - {fileID: 12800000, guid: bef04177fe4d9744bbd36f364c0180e4, type: 3}
+  - {fileID: 12800000, guid: 4ae2700d0f53da94db26dd00020427bd, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
