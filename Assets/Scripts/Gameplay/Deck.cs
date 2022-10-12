@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using UnityEngine;
 
@@ -61,6 +62,18 @@ public class Deck : MonoBehaviour
             shuffle();
             Debug.Log(deck);
         }
+        //deal - d
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            string[] cards = deal(5);
+
+            Debug.Log("Example Deal");
+
+            for(int i = 0; i < cards.Length; i++)
+            {
+                Debug.Log(cards[i]);
+            }
+        }
     }
 
     //shuffle the deck
@@ -70,7 +83,6 @@ public class Deck : MonoBehaviour
         {
             int x = (Random.Range(0, 78 - i));
             swapnum(ref deck[i], ref deck[x]);
-            Debug.Log(x);
         }
     }
 
@@ -81,5 +93,18 @@ public class Deck : MonoBehaviour
         x = y;
         y = temp;
         return;
+    }
+
+    public string[] deal(int numToDeal)
+    { 
+        string[] dealtHand = new string[numToDeal];
+        
+        for(int i = 0; i < numToDeal; i++)
+        {
+            dealtHand[i] = deck[deckLocation];
+            deckLocation++;
+        }
+
+        return dealtHand;
     }
 }
