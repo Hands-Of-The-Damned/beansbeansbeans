@@ -8,33 +8,78 @@ public class Deck : MonoBehaviour
     // Start is called before the first frame update
 
     string[] minorArcanaCardSuits = new string[] { "Pentacles", "Swords", "Wands", "Cups"};
-    string[] minorArcanaCardRanks = new string[] { "2", "3", "4", "5", "6", "7", "8", "9", "10", "Page", "Knight", "Queen", "King"};
-    string[] majorArcana = new string[] { "0", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX", "XI" };
-    string[] deck = new string[78];
-    public int deckLocation = 0;
+    string[] minorArcanaCardRanks = new string[] { "2", "3", "4", "5", "6", "7", "8", "9", "10", "Page", "Knight", "Queen", "King", "Ace"};
+    string[] majorArcana = new string[] { "0", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX", "XXI" };
+    string[] deck;
+
+    public int deckLocation;
+
+    
     void Start()
     {
         //generate deck on start
-        
+        deck = new string[78]; 
+        deckLocation = 0;
         for(int i = 0; i < minorArcanaCardSuits.Length; i++)
         {
+
             for(int j = 0; j < minorArcanaCardRanks.Length; j++)
             {
-                deck[deckLocation] = minorArcanaCardSuits[i] + "Of" + minorArcanaCardRanks[j];
+                deck[deckLocation] = minorArcanaCardRanks[j] + "Of" + minorArcanaCardSuits[i];
+                deckLocation++;
             }
         }
+        for (int i = 0; i < majorArcana.Length; i++)
+        {
+            deck[deckLocation] = majorArcana[i];
+            deckLocation++;
+        }
+        //reset deck location to 0
+        deckLocation = 0;
 
-
+        //shuffle the deck
+        shuffle();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        //Debug code - to be transitioned for prod
+
+        //show deck - t
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            for (int i = 0; i < deck.Length; i++)
+            {
+                Debug.Log(deck[i]);
+            }
+            
+        }
+        //shuffle - s
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            shuffle();
+            Debug.Log(deck);
+        }
     }
 
-    public void Shuffle()
+    //shuffle the deck
+    public void shuffle()
     {
+        for( int i = 0; i < deck.Length; i++)
+        {
+            int x = (Random.Range(0, 78 - i));
+            swapnum(ref deck[i], ref deck[x]);
+            Debug.Log(x);
+        }
+    }
 
+    static void swapnum(ref string x, ref string y)
+    {
+        string temp;
+        temp = x;
+        x = y;
+        y = temp;
+        return;
     }
 }
