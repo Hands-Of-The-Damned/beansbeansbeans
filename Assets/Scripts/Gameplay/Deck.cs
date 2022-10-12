@@ -94,7 +94,8 @@ public class Deck : MonoBehaviour
         y = temp;
         return;
     }
-
+    
+    //deal a certain number of cards
     public string[] deal(int numToDeal)
     { 
         string[] dealtHand = new string[numToDeal];
