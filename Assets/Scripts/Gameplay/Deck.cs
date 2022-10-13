@@ -11,13 +11,18 @@ public class Deck : MonoBehaviour
     string[] minorArcanaCardSuits = new string[] { "Pentacles", "Swords", "Wands", "Cups"};
     string[] minorArcanaCardRanks = new string[] { "2", "3", "4", "5", "6", "7", "8", "9", "10", "Page", "Knight", "Queen", "King", "Ace"};
     string[] majorArcana = new string[] { "0", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX", "XXI" };
+    
+    //needs to be changed to list for game in order to allow shuffling of remaining cards.
     string[] deck;
+
+    public List<string> discardPile;
 
     public int deckLocation;
 
     
     void Start()
     {
+        generateDeck();
         //generate deck on start
         deck = new string[78]; 
         deckLocation = 0;
@@ -107,5 +112,27 @@ public class Deck : MonoBehaviour
         }
 
         return dealtHand;
+    }
+
+    public void generateDeck()
+    {
+        deck = new string[78];
+        deckLocation = 0;
+        for (int i = 0; i < minorArcanaCardSuits.Length; i++)
+        {
+
+            for (int j = 0; j < minorArcanaCardRanks.Length; j++)
+            {
+                deck[deckLocation] = minorArcanaCardRanks[j] + "Of" + minorArcanaCardSuits[i];
+                deckLocation++;
+            }
+        }
+        for (int i = 0; i < majorArcana.Length; i++)
+        {
+            deck[deckLocation] = majorArcana[i];
+            deckLocation++;
+        }
+        //reset deck location to 0
+        deckLocation = 0;
     }
 }
