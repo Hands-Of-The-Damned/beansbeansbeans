@@ -9,25 +9,28 @@ public class moveHelpPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public void OnPointerEnter(PointerEventData eventData)
     {
         StopAllCoroutines();
-        moveHelpUp();
+        moveHelpOut();
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         StopAllCoroutines();
-        moveHelpDown();
+        moveHelpIn();
     }
     void Start()
     {
-        moveHelpDown();
+        moveHelpIn();
     }
 
-    private void moveHelpUp()
+    private void moveHelpOut()
     {
-        gameObject.transform.position = gameObject.transform.position = new Vector3(100, 270, 0);
+        gameObject.transform.position = gameObject.transform.position = new Vector3(100, 271, 0);
     }
-    private void moveHelpDown()
+    private void moveHelpIn()
     {
-        gameObject.transform.position = gameObject.transform.position = new Vector3(-83,270,0);
+        //float horizontalPos = Input.GetAxis("Horizontal");
+        //float verticalPos = Input.GetAxis("Vertical");
+        gameObject.transform.position = gameObject.transform.position = new Vector3(-82, 271, 0);
+        //Debug.Log(gameObject.transform.position);
     }
 }
