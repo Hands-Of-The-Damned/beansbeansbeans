@@ -86,7 +86,7 @@ public class Deck : MonoBehaviour
     {
         for( int i = 0; i < deck.Length; i++)
         {
-            int x = (Random.Range(0, 78 - i));
+            int x = (Random.Range(0, 78));
             swapnum(ref deck[i], ref deck[x]);
         }
     }
