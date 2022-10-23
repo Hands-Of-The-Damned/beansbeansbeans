@@ -9,7 +9,7 @@ public class Deck : MonoBehaviour
     // Start is called before the first frame update
 
     string[] minorArcanaCardSuits = new string[] { "Pentacles", "Swords", "Wands", "Cups"};
-    string[] minorArcanaCardRanks = new string[] { "2", "3", "4", "5", "6", "7", "8", "9", "10", "Page", "Knight", "Queen", "King", "Ace"};
+    string[] minorArcanaCardRanks = new string[] { "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "1"};
     string[] majorArcana = new string[] { "0", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX", "XXI" };
     
     //needs to be changed to list for game in order to allow shuffling of remaining cards.
