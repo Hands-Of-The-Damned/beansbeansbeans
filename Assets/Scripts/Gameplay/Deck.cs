@@ -27,7 +27,8 @@ public class Deck : MonoBehaviour
         
         //shuffle the deck
         shuffle();
-
+        shuffle();
+        shuffle();
 /*        deck = new string[78]; 
         deckLocation = 0;
         for(int i = 0; i < minorArcanaCardSuits.Length; i++)
