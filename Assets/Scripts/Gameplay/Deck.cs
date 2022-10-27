@@ -22,8 +22,12 @@ public class Deck : MonoBehaviour
     
     void Start()
     {
-        generateDeck();
         //generate deck on start
+        generateDeck();
+        
+        //shuffle the deck
+        shuffle();
+
 /*        deck = new string[78]; 
         deckLocation = 0;
         for(int i = 0; i < minorArcanaCardSuits.Length; i++)
@@ -44,15 +48,14 @@ public class Deck : MonoBehaviour
         //reset deck location to 0
 //        deckLocation = 0;
 
-        //shuffle the deck
-        shuffle();
+        
     }
 
     // Update is called once per frame
-    void Update()
+    /* void Update()
     {
-        //Debug code - to be transitioned for prod
-
+        //test code - to be transitioned for prod
+        
         //show deck - t
         if (Input.GetKeyDown(KeyCode.T))
         {
@@ -82,6 +85,7 @@ public class Deck : MonoBehaviour
             }
         }
     }
+    */
 
     //shuffle the deck
     public void shuffle()
