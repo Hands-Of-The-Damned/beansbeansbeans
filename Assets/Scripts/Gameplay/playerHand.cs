@@ -18,69 +18,9 @@ public class playerHand : MonoBehaviour
     private void Start()
     {
         //get deck component to make life easier
-        //deck = GetComponent<Deck>();
+        deck = GameObject.FindObjectOfType<Deck>();
 
     }
-
-    /*
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            Debug.Log("Drawing Cards...");
-            drawCardsFromDeck(5);
-        }
-
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            Debug.Log("Showing Cards in Hand...");
-            foreach (var card in hand)
-            {
-                Debug.Log(card);
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            Debug.Log("Reversing all cards in hand...");
-                for(int i = 0; i < hand.Count; i++)
-                {
-                    hand[i] = Reverse(hand[i]);
-                }
-            
-        }
-
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            Debug.Log("Discard Cards...");
-            int x = hand.Count; 
-            for(int i = 0; i < x; i++)
-            {
-                //discard all algo
-                discardCard(hand[x - (i + 1)]);
-
-            }
-
-            
-        }
-
-        if (Input.GetKeyDown(KeyCode.U))
-        {
-            Debug.Log("Using All Cards...");
-            int x = hand.Count;
-            for (int i = 0; i < x; i++)
-            {
-               //use all algo
-               useCard(hand[x - (i + 1)]);
-
-            }
-
-
-        }
-
-    }
-    */
-
     private bool isMinor(string card)
     {
         if(card.Length > 6)
@@ -161,4 +101,64 @@ public class playerHand : MonoBehaviour
         string [] cards = deck.deal(NumToDraw).ToArray<string>();
         hand.AddRange(cards);
     }
+    /*
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Debug.Log("Drawing Cards...");
+            drawCardsFromDeck(5);
+        }
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            Debug.Log("Showing Cards in Hand...");
+            foreach (var card in hand)
+            {
+                Debug.Log(card);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Debug.Log("Reversing all cards in hand...");
+                for(int i = 0; i < hand.Count; i++)
+                {
+                    hand[i] = Reverse(hand[i]);
+                }
+            
+        }
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            Debug.Log("Discard Cards...");
+            int x = hand.Count; 
+            for(int i = 0; i < x; i++)
+            {
+                //discard all algo
+                discardCard(hand[x - (i + 1)]);
+
+            }
+
+            
+        }
+
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            Debug.Log("Using All Cards...");
+            int x = hand.Count;
+            for (int i = 0; i < x; i++)
+            {
+               //use all algo
+               useCard(hand[x - (i + 1)]);
+
+            }
+
+
+        }
+
+    }
+    */
+
+
 }

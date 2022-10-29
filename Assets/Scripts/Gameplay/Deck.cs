@@ -28,7 +28,7 @@ public class Deck : MonoBehaviour
         //shuffle the deck
         shuffle();
         shuffle();
-        shuffle();
+        shuffle(); //this is a dumb way to do it, but I don't want to implement "shuffle deck x amount of times" when shuffling it once works.
 /*        deck = new string[78]; 
         deckLocation = 0;
         for(int i = 0; i < minorArcanaCardSuits.Length; i++)
@@ -51,8 +51,51 @@ public class Deck : MonoBehaviour
 
         
     }
+    //shuffle the deck
+    public void shuffle()
+    {
+        for (int i = 0; i < deck.Count; i++)
+        {
+            int x = (Random.Range(0, deck.Count - 1));
+            string temp;
+            temp = deck[x];
+            deck[x] = deck[i];
+            deck[i] = temp;
 
-    // Update is called once per frame
+        }
+    }
+
+    //deal a certain number of cards
+    public string[] deal(int numToDeal)
+    {
+        string[] dealtHand = new string[numToDeal];
+
+
+        dealtHand = deck.GetRange(0, numToDeal).ToArray();
+        deck.RemoveRange(0, numToDeal);
+
+        return dealtHand;
+    }
+
+    //generate new deck. Only to be used after a round is over.
+    public void generateDeck()
+    {
+        deck.Clear();
+        for (int i = 0; i < minorArcanaCardSuits.Length; i++)
+        {
+
+            for (int j = 0; j < minorArcanaCardRanks.Length; j++)
+            {
+                deck.Add(minorArcanaCardRanks[j] + "Of" + minorArcanaCardSuits[i]);
+            }
+        }
+        for (int i = 0; i < majorArcana.Length; i++)
+        {
+            deck.Add(majorArcana[i]);
+        }
+    }
+
+    // Code below is for testing purposes
     /* void Update()
     {
         //test code - to be transitioned for prod
@@ -88,60 +131,5 @@ public class Deck : MonoBehaviour
     }
     */
 
-    //shuffle the deck
-    public void shuffle()
-    {
-        for(int i = 0; i < deck.Count; i++)
-        {
-            int x = (Random.Range(0, deck.Count - 1));
-            string temp;
-            temp = deck[x];
-            deck[x] = deck[i];
-            deck[i] = temp;
-            
-        }
-    }
 
-  //static void swapnum(string x, string y){    }
-    
-    //deal a certain number of cards
-    public string[] deal(int numToDeal)
-    { 
-        string[] dealtHand = new string[numToDeal];
-        
-        //for(int i = 0; i < numToDeal; i++)
-        
-        dealtHand = deck.GetRange(0, numToDeal).ToArray();
- //           deckLocation++;
-        deck.RemoveRange(0, numToDeal);
-
-        return dealtHand;
-    }
-
-    public void generateDeck()
-    {
-        //DEPRECIATED
-        //___________
-
-        //deck = new string[78];
-        //deckLocation = 0;
-        //___________
-
-        for (int i = 0; i < minorArcanaCardSuits.Length; i++)
-        {
-
-            for (int j = 0; j < minorArcanaCardRanks.Length; j++)
-            {
-                deck.Add(minorArcanaCardRanks[j] + "Of" + minorArcanaCardSuits[i]);
-                //deckLocation++;
-            }
-        }
-        for (int i = 0; i < majorArcana.Length; i++)
-        {
-            deck.Add(majorArcana[i]);
-            //deckLocation++;
-        }
-        //reset deck location to 0
-        //deckLocation = 0;
-    }
 }
