@@ -22,26 +22,9 @@ public class Deck : MonoBehaviour
     
     void Start()
     {
-        generateDeck();
         //generate deck on start
-        deck = new string[78]; 
-        deckLocation = 0;
-        for(int i = 0; i < minorArcanaCardSuits.Length; i++)
-        {
-
-            for(int j = 0; j < minorArcanaCardRanks.Length; j++)
-            {
-                deck[deckLocation] = minorArcanaCardRanks[j] + "Of" + minorArcanaCardSuits[i];
-                deckLocation++;
-            }
-        }
-        for (int i = 0; i < majorArcana.Length; i++)
-        {
-            deck[deckLocation] = majorArcana[i];
-            deckLocation++;
-        }
-        //reset deck location to 0
-        deckLocation = 0;
+        generateDeck();
+        
 
         //shuffle the deck
         shuffle();
