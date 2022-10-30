@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -16,12 +18,10 @@ public class playerHand : MonoBehaviour
     private void Start()
     {
         //get deck component to make life easier
-        deck = GetComponent<Deck>();
+        deck = GameObject.FindObjectOfType<Deck>();
+
     }
-    // Update is called once per frame
-
-
-    public bool isMinor(string card)
+    private bool isMinor(string card)
     {
         if(card.Length > 6)
         {
@@ -39,7 +39,8 @@ public class playerHand : MonoBehaviour
         if (isMinor(card) == false) 
         {
             playCard?.Invoke();
-            discardCard(card); 
+            discardCard(card);
+            Debug.Log("Used " + card);
         }
 
     }
@@ -68,18 +69,24 @@ public class playerHand : MonoBehaviour
 
     //Add R to end if no R is there. If R is there, remove R. Might be broken, needs review
 
-    public void reverse(ref string cardToReverse)
+    public string Reverse(string cardToReverse)
     {
         if(isMinor(cardToReverse) == false)
         {
-            if (cardToReverse.EndsWith('R'))
+            if (isReversed(cardToReverse))
             {
                 cardToReverse = cardToReverse.Remove(cardToReverse.IndexOf('R'));
+                return cardToReverse;
+            }
+            else
+            {
+                cardToReverse = cardToReverse + 'R';
+                return cardToReverse;
             }
         }
         else
         {
-            cardToReverse = cardToReverse + 'R';
+            return cardToReverse;
         }
     }
 
@@ -91,7 +98,67 @@ public class playerHand : MonoBehaviour
     }
     public void drawCardsFromDeck(int NumToDraw)
     {
-        List<string> cards = new List<string>(deck.deal(NumToDraw));
+        string [] cards = deck.deal(NumToDraw).ToArray<string>();
         hand.AddRange(cards);
     }
+    /*
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Debug.Log("Drawing Cards...");
+            drawCardsFromDeck(5);
+        }
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            Debug.Log("Showing Cards in Hand...");
+            foreach (var card in hand)
+            {
+                Debug.Log(card);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Debug.Log("Reversing all cards in hand...");
+                for(int i = 0; i < hand.Count; i++)
+                {
+                    hand[i] = Reverse(hand[i]);
+                }
+            
+        }
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            Debug.Log("Discard Cards...");
+            int x = hand.Count; 
+            for(int i = 0; i < x; i++)
+            {
+                //discard all algo
+                discardCard(hand[x - (i + 1)]);
+
+            }
+
+            
+        }
+
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            Debug.Log("Using All Cards...");
+            int x = hand.Count;
+            for (int i = 0; i < x; i++)
+            {
+               //use all algo
+               useCard(hand[x - (i + 1)]);
+
+            }
+
+
+        }
+
+    }
+    */
+
+
 }
