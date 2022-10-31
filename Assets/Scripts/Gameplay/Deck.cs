@@ -13,18 +13,37 @@ public class Deck : MonoBehaviour
     string[] majorArcana = new string[] { "0", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX", "XXI" };
     
     //needs to be changed to list for game in order to allow shuffling of remaining cards.
-    string[] deck;
+
+    public List<string> deck;
 
     public List<string> discardPile;
 
-    public int deckLocation;
+    //public int deckLocation;
 
     
     void Start()
     {
-        //generate deck on start
         generateDeck();
-        
+        //generate deck on start
+/*        deck = new string[78]; 
+        deckLocation = 0;
+        for(int i = 0; i < minorArcanaCardSuits.Length; i++)
+        {
+
+            for(int j = 0; j < minorArcanaCardRanks.Length; j++)
+            {
+                deck[deckLocation] = minorArcanaCardRanks[j] + "Of" + minorArcanaCardSuits[i];
+                deckLocation++;
+          }
+      }
+        for (int i = 0; i < majorArcana.Length; i++)
+        {
+            deck[deckLocation] = majorArcana[i];
+            deckLocation++;
+        }
+*/
+        //reset deck location to 0
+//        deckLocation = 0;
 
         //shuffle the deck
         shuffle();
@@ -38,7 +57,7 @@ public class Deck : MonoBehaviour
         //show deck - t
         if (Input.GetKeyDown(KeyCode.T))
         {
-            for (int i = 0; i < deck.Length; i++)
+            for (int i = 0; i < deck.Count; i++)
             {
                 Debug.Log(deck[i]);
             }
@@ -51,6 +70,7 @@ public class Deck : MonoBehaviour
             Debug.Log(deck);
         }
         //deal - d
+
         if (Input.GetKeyDown(KeyCode.D))
         {
             string[] cards = deal(5);
@@ -67,55 +87,57 @@ public class Deck : MonoBehaviour
     //shuffle the deck
     public void shuffle()
     {
-        for( int i = 0; i < deck.Length; i++)
+        for(int i = 0; i < deck.Count; i++)
         {
-            int x = (Random.Range(0, 78));
-            swapnum(ref deck[i], ref deck[x]);
+            int x = (Random.Range(0, deck.Count - 1));
+            string temp;
+            temp = deck[x];
+            deck[x] = deck[i];
+            deck[i] = temp;
+            
         }
     }
 
-    static void swapnum(ref string x, ref string y)
-    {
-        string temp;
-        temp = x;
-        x = y;
-        y = temp;
-        return;
-    }
+  //static void swapnum(string x, string y){    }
     
     //deal a certain number of cards
     public string[] deal(int numToDeal)
     { 
         string[] dealtHand = new string[numToDeal];
         
-        for(int i = 0; i < numToDeal; i++)
-        {
-            dealtHand[i] = deck[deckLocation];
-            deckLocation++;
-        }
+        //for(int i = 0; i < numToDeal; i++)
+        
+        dealtHand = deck.GetRange(0, numToDeal).ToArray();
+ //           deckLocation++;
+        deck.RemoveRange(0, numToDeal);
 
         return dealtHand;
     }
 
     public void generateDeck()
     {
-        deck = new string[78];
-        deckLocation = 0;
+        //DEPRECIATED
+        //___________
+
+        //deck = new string[78];
+        //deckLocation = 0;
+        //___________
+
         for (int i = 0; i < minorArcanaCardSuits.Length; i++)
         {
 
             for (int j = 0; j < minorArcanaCardRanks.Length; j++)
             {
-                deck[deckLocation] = minorArcanaCardRanks[j] + "Of" + minorArcanaCardSuits[i];
-                deckLocation++;
+                deck.Add(minorArcanaCardRanks[j] + "Of" + minorArcanaCardSuits[i]);
+                //deckLocation++;
             }
         }
         for (int i = 0; i < majorArcana.Length; i++)
         {
-            deck[deckLocation] = majorArcana[i];
-            deckLocation++;
+            deck.Add(majorArcana[i]);
+            //deckLocation++;
         }
         //reset deck location to 0
-        deckLocation = 0;
+        //deckLocation = 0;
     }
 }
