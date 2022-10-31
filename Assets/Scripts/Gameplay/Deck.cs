@@ -13,6 +13,7 @@ public class Deck : MonoBehaviour
     string[] majorArcana = new string[] { "0", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX", "XXI" };
     
     //needs to be changed to list for game in order to allow shuffling of remaining cards.
+
     public List<string> deck;
 
     public List<string> discardPile;
