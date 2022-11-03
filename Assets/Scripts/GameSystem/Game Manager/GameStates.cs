@@ -13,6 +13,7 @@ public class GameStates : MonoBehaviour
         EndGame
     }
 
+    GameManagerPublisher eventSystem;
     states state = states.Initial;  
     Player[] players;
     Player[] playersInRound;
@@ -80,12 +81,9 @@ public class GameStates : MonoBehaviour
                 deck.shuffle();
                 //check if player is ready or wants to exit game
 
-
-
-                foreach (Player x in playerQueue)
-                {
-                    dealToPlayer(5, x);
-                }
+                //Deal the first 5 cards
+                initialDeal(playersInRound);
+                
 
                 foreach (Player x in playerQueue)
                 {
@@ -113,9 +111,9 @@ public class GameStates : MonoBehaviour
          */
     }
 
-    void dealToPlayer(int numCards, Player player)
+    string dealToPlayer(int numCards, Player player)
     {
-       //deal numCards to player
+        return deck.deal(numCards);
     }
 
     void removePlayerFormRound(PlayerPrefs player)
@@ -128,20 +126,15 @@ public class GameStates : MonoBehaviour
         //remove player from players array
     }
 
-
-    //Turn this into an event!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    void Playhand(Player currentPlayer)
+    //Deal the first five cards to the players 1 at a time
+    void initialDeal(Player[] players)
     {
-        bool endturn = false;
-        while (endturn)
+        for(int i = 0; i < players.Length; i++)
         {
-         //check if the bet was raised, if so player must call the raise or raise themselves. Play major arcana first though? maybe the player wants to draw more cards first. 
-
-        //check for a bet or check call
-        
-        //check for major arcana play
-
-        //check for endturn
+            foreach(Player x in players)
+            {
+                eventSystem.DealToPlayer(x, dealToPlayer(1,x));
+            }
         }
     }
 
