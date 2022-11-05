@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/*
 public class GameManagerListener : MonoBehaviour
 {
 
@@ -36,3 +36,4 @@ public class GameManagerListener : MonoBehaviour
 
     
 }
+*/

@@ -1,10 +1,14 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+
 public class GameStates : MonoBehaviour
 {
     // Start is called before the first frame update
+    GameObject Player;
 
     enum states
     {
@@ -22,19 +26,19 @@ public class GameStates : MonoBehaviour
     bool raise = false;
     int handcount;
 
-    void Start()
+    void //Start()
     {
         handcount = 1;
     }
 
     // Update is called once per frame
-    void Update()
+    void //Update()
     {
         switch (state)
         {
             case states.Initial:
-                gameInitialize(players);
-                break;
+               gameInitialize(players);
+               break;
 
             case states.GameLoop:
                 gameLoop(playerQueue, deck);
@@ -108,7 +112,7 @@ public class GameStates : MonoBehaviour
         /*
          * Exit the game(return to menu or open world)
          * maybe some other stuff
-         */
+         
     }
 
     string dealToPlayer(int numCards, Player player)
@@ -147,4 +151,5 @@ public class GameStates : MonoBehaviour
         return players;
     }
 }
+*/
 

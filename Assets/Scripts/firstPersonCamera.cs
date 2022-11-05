@@ -7,6 +7,7 @@ public class firstPersonCamera : MonoBehaviour
     public Transform player;
     public float mouseSensitivity = 2f;
     float cameraVerticleRotation = 0f;
+    
 
     bool lockedCursor = true;
     // Start is called before the first frame update

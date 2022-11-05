@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/*
 public class GameEventsListener : MonoBehaviour
 {
     //Subscribe to events
@@ -35,3 +35,4 @@ public class GameEventsListener : MonoBehaviour
         GameManagerPublisher.Deal -= GameManagerPublisher_Deal;
     }
 }
+*/

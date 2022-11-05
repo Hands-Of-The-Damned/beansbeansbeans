@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+
 public class GameManagerPublisher : MonoBehaviour
 {
     /* EVENT 1
      * Betting Round Event
      * send current pot ammount, current bet ammount, current betting round, string of current players turn
-     */
+     
 
     public class SendBettingRoundInfoEvent
     {
@@ -37,7 +39,7 @@ public class GameManagerPublisher : MonoBehaviour
     /* EVENT 2
      * Send Delt Card Event
      * Send delt card to a player
-     */
+     
     public class DealToPlayerEvent
     {
         public GameManagerPublisher eventSystem;
@@ -85,8 +87,9 @@ public class GameManagerPublisher : MonoBehaviour
     /* EVENT HANDLE    
     * Game Start Event
     * receive an array of the players in the game to initialize the game
-    */
+    
 
 
 
 }
+    */
