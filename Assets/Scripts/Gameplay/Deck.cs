@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/*
 public class Deck
 {
     private List<Card> _allCards = new List<Card>();
@@ -28,3 +28,4 @@ public class Deck
         return card;
     }
 }
+*/

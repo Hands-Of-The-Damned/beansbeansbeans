@@ -8,7 +8,7 @@ using UnityEngine.Events;
 public class playerHand : MonoBehaviour
 {
     //Player hand
-    public List<string> hand;
+    public List<Card> hand;
 
     public Deck deck;
 
@@ -21,44 +21,31 @@ public class playerHand : MonoBehaviour
         deck = GameObject.FindObjectOfType<Deck>();
 
     }
-    private bool isMinor(string card)
-    {
-        if(card.Length > 6)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
 
     //can only use major arcana
-    public void useCard(string card)
+    public void useCard(Card card)
     {
-        if (isMinor(card) == false) 
+        if (card.isMinor == false) 
         {
-            playCard?.Invoke();
-            discardCard(card);
-            Debug.Log("Used " + card);
+            //Do a thing
         }
 
     }
 
     //get rid of card, add to discard deck
-    public void discardCard(string card)
+    public void discardCard(Card card)
     {
         hand.Remove(card);
         deck.discardPile.Add(card);
     }
     
     //get minor arcana card
-    public string[] getMinor()
+    public Card[] getMinor()
     {
-        List<string> minorArcana = new List<string>();
+        List<Card> minorArcana = new List<Card>();
         for (int i = 0; i < hand.Count; i++)
         {
-            if (isMinor(hand[i]))
+            if (hand[i].isMinor)
             {
                 minorArcana.Add(hand[i]);
             }
@@ -67,38 +54,14 @@ public class playerHand : MonoBehaviour
         return minorArcana.ToArray();
     }
 
-    //Add R to end if no R is there. If R is there, remove R. Might be broken, needs review
-
-    public string Reverse(string cardToReverse)
+    public void Reverse(MajorArcana card)
     {
-        if(isMinor(cardToReverse) == false)
-        {
-            if (isReversed(cardToReverse))
-            {
-                cardToReverse = cardToReverse.Remove(cardToReverse.IndexOf('R'));
-                return cardToReverse;
-            }
-            else
-            {
-                cardToReverse = cardToReverse + 'R';
-                return cardToReverse;
-            }
-        }
-        else
-        {
-            return cardToReverse;
-        }
+        card.ReverseCard();
     }
 
-    public bool isReversed(string cardToCheck)
-    {
-              
-        return cardToCheck.EndsWith('R');
-        
-    }
     public void drawCardsFromDeck(int NumToDraw)
     {
-        string [] cards = deck.deal(NumToDraw).ToArray<string>();
+        Card [] cards = deck.deal(NumToDraw);
         hand.AddRange(cards);
     }
     /*
