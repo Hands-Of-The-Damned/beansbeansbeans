@@ -12,10 +12,13 @@ public class zoomCamera : MonoBehaviour
 
     
     private int currentCamera;
-
+    
     // Update is called once per frame
     void Update()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = true;
+
         if(componentBase == null)
         {
             componentBase = virtualCamera.GetCinemachineComponent(CinemachineCore.Stage.Body);

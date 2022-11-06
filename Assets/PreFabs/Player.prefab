@@ -114,7 +114,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c339e077028d86d469ac7996bc107d25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hand: []
   deck: {fileID: 0}
   playCard:
     m_PersistentCalls:
@@ -366,8 +365,8 @@ MonoBehaviour:
     m_InputAxisName: Mouse X
     m_InputAxisValue: 0
     m_InvertInput: 0
-    m_MinValue: -180
-    m_MaxValue: 180
+    m_MinValue: -90
+    m_MaxValue: 90
     m_Wrap: 1
     m_Recentering:
       m_enabled: 0
