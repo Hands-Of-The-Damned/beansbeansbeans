@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-/*
+
 public class GameManagerListener : MonoBehaviour
 {
 
@@ -13,14 +13,14 @@ public class GameManagerListener : MonoBehaviour
 
     private void PlayerEventPublisher_RoundInfo(object sender, PlayerEventPublisher.SendRoundDecision args)
     {
-        if (args.didFold)
+        if (args.fold)
         {
             //remove player from queue
         }
 
        //set current bet to bet amount
 
-        if (args.didRaise)
+        if (args.raise)
         {
             //reset the queue
         }
@@ -36,4 +36,3 @@ public class GameManagerListener : MonoBehaviour
 
     
 }
-*/

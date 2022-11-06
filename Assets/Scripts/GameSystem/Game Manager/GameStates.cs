@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/*
+
 
 public class GameStates : MonoBehaviour
 {
-    // Start is called before the first frame update
+    //Start is called before the first frame update
     GameObject Player;
 
     enum states
@@ -18,7 +18,7 @@ public class GameStates : MonoBehaviour
     }
 
     GameManagerPublisher eventSystem;
-    states state = states.Initial;  
+    states state = states.Initial;
     Player[] players;
     Player[] playersInRound;
     Queue playerQueue;
@@ -26,19 +26,19 @@ public class GameStates : MonoBehaviour
     bool raise = false;
     int handcount;
 
-    void //Start()
+    void Start()
     {
         handcount = 1;
     }
 
-    // Update is called once per frame
-    void //Update()
+    //Update is called once per frame
+    void Update()
     {
         switch (state)
         {
             case states.Initial:
-               gameInitialize(players);
-               break;
+                gameInitialize(players);
+                break;
 
             case states.GameLoop:
                 gameLoop(playerQueue, deck);
@@ -53,17 +53,17 @@ public class GameStates : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// This function will take a player array full of the players in the game.
-    /// The array is used to populate the player queue for the gameloop
-    /// </summary>
-    /// <param name="players"></param>
+    // <summary>
+    // This function will take a player array full of the players in the game.
+    // The array is used to populate the player queue for the gameloop
+    // </summary>
+    // <param name="players"></param>
     //might need to change return type
     void gameInitialize(Player[] players)
     {
         Queue PlayerQueue = new Queue();
         playersInRound = players;
-        foreach(Player x in players)
+        foreach (Player x in players)
         {
             //populate player queue
         }
@@ -78,46 +78,47 @@ public class GameStates : MonoBehaviour
 
     void gameLoop(Queue players, Deck deck)
     {
-        while(everyone not yet big blind){
-            while (not showdown)
-            {
-                //Play the game 
-                deck.shuffle();
-                //check if player is ready or wants to exit game
+        //while (everyone not yet big blind){
+        //    while (not showdown)
+        //    {
+        //        //Play the game 
+        //        deck.shuffle();
+        //        //check if player is ready or wants to exit game
 
-                //Deal the first 5 cards
-                initialDeal(playersInRound);
-                
-
-                foreach (Player x in playerQueue)
-                {
-                    //send event into void declaring which players turn it is
-                    //wait for player to send the event with decision info
-                    //do something with the info packet
-
-                }
+        //        //Deal the first 5 cards
+        //        initialDeal(playersInRound);
 
 
-                if (1 player still in)
-                    end round
-            }
+        //        foreach (Player x in playerQueue)
+        //        {
+        //            //send event into void declaring which players turn it is
+        //            //wait for player to send the event with decision info
+        //            //do something with the info packet
 
-        }
-        state = states.EndGame;
+        //        }
+
+
+        //        if (1 player still in)
+        //            //end round
+        //    }
+
+        //}
+        //state = states.EndGame;
     }
 
 
     void endGame()
     {
-        /*
-         * Exit the game(return to menu or open world)
-         * maybe some other stuff
-         
+
+        // Exit the game(return to menu or open world)
+        // maybe some other stuff
+
     }
 
     string dealToPlayer(int numCards, Player player)
     {
-        return deck.deal(numCards);
+        //return deck.deal(numCards);
+        return "";
     }
 
     void removePlayerFormRound(PlayerPrefs player)
@@ -133,11 +134,11 @@ public class GameStates : MonoBehaviour
     //Deal the first five cards to the players 1 at a time
     void initialDeal(Player[] players)
     {
-        for(int i = 0; i < players.Length; i++)
+        for (int i = 0; i < players.Length; i++)
         {
-            foreach(Player x in players)
+            foreach (Player x in players)
             {
-                eventSystem.DealToPlayer(x, dealToPlayer(1,x));
+                eventSystem.DealToPlayer(x, dealToPlayer(1, x));
             }
         }
     }
@@ -151,5 +152,5 @@ public class GameStates : MonoBehaviour
         return players;
     }
 }
-*/
+
 

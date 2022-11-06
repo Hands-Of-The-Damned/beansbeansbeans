@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-/*
+
 public class GameEventsListener : MonoBehaviour
 {
     //Subscribe to events
@@ -14,18 +14,18 @@ public class GameEventsListener : MonoBehaviour
 
     private void GameManagerPublisher_Deal(object sender, GameManagerPublisher.DealToPlayerEvent args)
     {
-        if(args.player == this.playerName)
-        {
-            //recive the card
-        }
+        //if (args.player == this.playerName)
+        //{
+        //    //recive the card
+        //}
     }
 
     private void GameManagerPublisher_BettingRoundInfo(object sender, GameManagerPublisher.SendBettingRoundInfoEvent args)
     {
-        if (args.player == this.playerName)
-        {
-            //Recive round info and let this player play their hand
-        }
+        //if (args.player == this.playerName)
+        //{
+        //    //Recive round info and let this player play their hand
+        //}
     }
 
 
@@ -35,4 +35,3 @@ public class GameEventsListener : MonoBehaviour
         GameManagerPublisher.Deal -= GameManagerPublisher_Deal;
     }
 }
-*/
