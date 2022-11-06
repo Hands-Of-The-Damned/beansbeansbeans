@@ -8,7 +8,7 @@ using UnityEngine.Events;
 public class playerHand : MonoBehaviour
 {
     //Player hand
-    public List<Card> hand;
+    public List<Card> hand = new List<Card>();
 
     public Deck deck;
 
@@ -28,6 +28,7 @@ public class playerHand : MonoBehaviour
         if (card.isMinor == false) 
         {
             //Do a thing
+            discardCard(card);
         }
 
     }
@@ -54,17 +55,12 @@ public class playerHand : MonoBehaviour
         return minorArcana.ToArray();
     }
 
-    public void Reverse(MajorArcana card)
-    {
-        card.ReverseCard();
-    }
-
     public void drawCardsFromDeck(int NumToDraw)
     {
         Card [] cards = deck.deal(NumToDraw);
         hand.AddRange(cards);
     }
-    /*
+    
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Q))
@@ -73,12 +69,13 @@ public class playerHand : MonoBehaviour
             drawCardsFromDeck(5);
         }
 
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.H))
         {
             Debug.Log("Showing Cards in Hand...");
             foreach (var card in hand)
             {
-                Debug.Log(card);
+                Debug.Log(card.CardName);
+                Debug.Log(card.IsReverse);
             }
         }
 
@@ -87,7 +84,7 @@ public class playerHand : MonoBehaviour
             Debug.Log("Reversing all cards in hand...");
                 for(int i = 0; i < hand.Count; i++)
                 {
-                    hand[i] = Reverse(hand[i]);
+                    hand[i].ReverseCard();
                 }
             
         }
@@ -121,7 +118,7 @@ public class playerHand : MonoBehaviour
         }
 
     }
-    */
+    
 
 
 }

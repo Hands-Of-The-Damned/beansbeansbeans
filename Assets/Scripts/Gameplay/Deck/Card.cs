@@ -4,20 +4,21 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 public class Card
-    {
+{
 
         ///<summary> 
         ///This covers Minor and Major arcana
         ///</summary>
-        public string CardName;
-        public bool isMinor;
-        
-    }
+    public string CardName;
+    public bool isMinor;
+    public bool IsReverse;
+    public virtual void ReverseCard() { }
+}
 
 public class MinorArcana : Card
 {
-    public new string CardName;
-    public new bool isMinor;
+    //public string CardName;
+    //public new bool isMinor;
     public int CardRank;
     public int CardSuit;
     public MinorArcana(int cardRank, int cardSuit)
@@ -60,7 +61,7 @@ public class MinorArcana : Card
             switch (CardSuit)
             {
                 case 1:
-                    CardNameP2 = "Pentackes";
+                    CardNameP2 = "Pentacles";
                     break;
 
                 case 2:
@@ -87,11 +88,10 @@ public class MinorArcana : Card
 
 public class MajorArcana : Card
 {
-    public new bool isMinor;
-    public new string CardName;
+    //public new bool isMinor;
+    //public new string CardName;
     public string Numeral;
     public int CardNumber;
-    public bool IsReverse;
     /// <summary>
     /// Only need number to reference Major Arcana Effect Table.
     /// </summary>
@@ -221,7 +221,7 @@ public class MajorArcana : Card
         
     }
 
-    public void ReverseCard()
+    public override void ReverseCard()
     {
         IsReverse = !IsReverse;
     }

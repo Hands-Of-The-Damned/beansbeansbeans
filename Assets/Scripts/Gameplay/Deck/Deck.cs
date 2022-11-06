@@ -14,9 +14,9 @@ public class Deck : MonoBehaviour
     
     //needs to be changed to list for game in order to allow shuffling of remaining cards.
 
-    public List<Card> deck;
+    public List<Card> deck = new List<Card>();
 
-    public List<Card> discardPile;
+    public List<Card> discardPile = new List<Card>();
 
     //public int deckLocation;
 
@@ -24,28 +24,6 @@ public class Deck : MonoBehaviour
     void Start()
     {
         generateDeck();
-        //generate deck on start
-/*        deck = new string[78]; 
-        deckLocation = 0;
-        for(int i = 0; i < minorArcanaCardSuits.Length; i++)
-        {
-
-            for(int j = 0; j < minorArcanaCardRanks.Length; j++)
-            {
-                deck[deckLocation] = minorArcanaCardRanks[j] + "Of" + minorArcanaCardSuits[i];
-                deckLocation++;
-          }
-      }
-        for (int i = 0; i < majorArcana.Length; i++)
-        {
-            deck[deckLocation] = majorArcana[i];
-            deckLocation++;
-        }
-*/
-        //reset deck location to 0
-//        deckLocation = 0;
-
-        //shuffle the deck
         shuffle();
     }
 
@@ -59,7 +37,7 @@ public class Deck : MonoBehaviour
         {
             for (int i = 0; i < deck.Count; i++)
             {
-                Debug.Log(deck[i]);
+                Debug.Log(deck[i].CardName);
             }
             
         }
@@ -71,15 +49,25 @@ public class Deck : MonoBehaviour
         }
         //deal - d
 
-        if (Input.GetKeyDown(KeyCode.D))
+        //if (Input.GetKeyDown(KeyCode.D))
+        //{
+        //    Card[] cards = deal(5);
+
+        //    Debug.Log("Example Deal");
+
+        //    for(int i = 0; i < cards.Length; i++)
+        //    {
+        //        Debug.Log(cards[i].CardName);
+        //    }
+        //}
+
+        //show discads - e
+
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            Card[] cards = deal(5);
-
-            Debug.Log("Example Deal");
-
-            for(int i = 0; i < cards.Length; i++)
+            for (int i = 0; i < discardPile.Count; i++)
             {
-                Debug.Log(cards[i]);
+                Debug.Log(discardPile[i].CardName);
             }
         }
     }
