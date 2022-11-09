@@ -5,6 +5,8 @@ using UnityEngine;
 public class GameManagerListener : MonoBehaviour
 {
 
+    GameStates game;
+
     //Subscribe to events
     public void OnEnable()
     {
@@ -16,13 +18,21 @@ public class GameManagerListener : MonoBehaviour
         if (args.fold)
         {
             //remove player from queue
+            game.removePlayerFormRound(args.thisPlayer);
+            game.playerReply = true;
         }
-
-       //set current bet to bet amount
-
-        if (args.raise)
+        else if (args.raise)
         {
-            //reset the queue
+            //player raised
+            game.bet = args.bet;
+            game.pot += args.bet;
+            game.resetQueue(args.thisPlayer);
+            game.playerReply = true;
+        }
+        else //Player checked the bet
+        {
+            game.pot += args.bet;
+            game.playerReply = true;
         }
     }
 
@@ -31,7 +41,7 @@ public class GameManagerListener : MonoBehaviour
     //Unsubscribe to events
     public void OnDisable()
     {
-        
+        PlayerEventPublisher.RoundInfo += PlayerEventPublisher_RoundInfo;
     }
 
     

@@ -26,12 +26,12 @@ public class GameStates : MonoBehaviour
     Deck deck;
     bool allPlayersBigBlind = false;
     bool showDownBool;
-    bool playerReply;
+    public bool playerReply;
     int bigBlind;
     int smallBlind;
     int round;
-    int pot;
-    int bet;
+    public int pot;
+    public int bet;
     int smallBlindAmt;
     int bigBlindAmt;
 
@@ -76,7 +76,7 @@ public class GameStates : MonoBehaviour
     /// </summary>
     /// <param name="players"></param>
     //might need to change return type
-    void gameInitialize(Player[] playersInGame)
+    public void gameInitialize(Player[] playersInGame)
     {
         playerQueue = new Queue();
         players = playersInGame;
@@ -88,7 +88,7 @@ public class GameStates : MonoBehaviour
     }
 
 
-    void gameLoop()
+    public void gameLoop()
     {
         while (!allPlayersBigBlind)
         {
@@ -143,7 +143,7 @@ public class GameStates : MonoBehaviour
     /// <summary>
     /// Use hand regocnition to declare a winner, move big and small blind, increase round count, set state back to GameLoop
     /// </summary>
-    void showDown()
+    public void showDown()
     {
         //evaluate hands and declare a winner for the round, maybe use an event for this
         showDownBool = false;
@@ -152,7 +152,7 @@ public class GameStates : MonoBehaviour
     /// <summary>
     /// Display the end of game screen
     /// </summary>
-    void endGame()
+    public void endGame()
     {
 
         // Exit the game(return to menu or open world)
@@ -166,7 +166,7 @@ public class GameStates : MonoBehaviour
     /// <param name="numCards"></param>
     /// <param name="player"></param>
     /// <returns></returns>
-    Card dealToPlayer(int numCards, Player player)
+    public Card dealToPlayer(int numCards, Player player)
     {
         return deck.deal(numCards)[0];
     }
@@ -175,7 +175,7 @@ public class GameStates : MonoBehaviour
     /// Remove @param player form the current round
     /// </summary>
     /// <param name="player"></param>
-    void removePlayerFormRound(Player player)
+    public void removePlayerFormRound(Player player)
     {
         for(int i = 0; i < playersInRound.Length; i++)
         {
@@ -190,7 +190,7 @@ public class GameStates : MonoBehaviour
     /// Removes the player from the game
     /// </summary>
     /// <param name="player"></param>
-    void removePlayerFromGame(Player player)
+    public void removePlayerFromGame(Player player)
     {
         for (int i = 0; i < players.Length; i++)
         {
@@ -205,7 +205,7 @@ public class GameStates : MonoBehaviour
     /// Deal the first five cards to the players 1 at a time
     /// </summary>
     /// <param name="players"></param>
-    void initialDeal()
+    public void initialDeal()
     {
         for (int i = 0; i <= 5; i++)
         {
@@ -224,7 +224,7 @@ public class GameStates : MonoBehaviour
     /// Reset the queue with @param player at the end of queue
     /// </summary>
     /// <param name="player"></param>
-    void resetQueue(Player player)
+    public void resetQueue(Player player)
     {
         int j = 0;
         for (int i = 0; i < playersInRound.Length; i++)
@@ -252,7 +252,7 @@ public class GameStates : MonoBehaviour
     /// <summary>
     /// Set the queue with the current players in the round
     /// </summary>
-    void setQueue()
+    public void setQueue()
     {
         foreach (Player x in playersInRound)
         {
@@ -266,7 +266,7 @@ public class GameStates : MonoBehaviour
     /// <summary>
     /// Set the playersInRound array with the players that are in the players array
     /// </summary>
-    void setPlayersInRound()
+    public void setPlayersInRound()
     {
         
             for(int i = 0; i < players.Length; i++)
@@ -283,7 +283,7 @@ public class GameStates : MonoBehaviour
     /// Update the big blind to the next player in the game
     /// </summary>
     /// <returns></returns>
-    bool updateBigBlind()
+    public bool updateBigBlind()
     {
         bigBlind++;
         if(bigBlind > players.Length-1)
@@ -302,7 +302,7 @@ public class GameStates : MonoBehaviour
     /// Update the small blind based on current big blind
     /// </summary>
     /// <param name="newSmallBlind"></param>
-    void updateSmallBlind(int newSmallBlind)
+    public void updateSmallBlind(int newSmallBlind)
     {
         smallBlind = newSmallBlind;
         if (players[smallBlind] == null && smallBlind >= 0)
@@ -319,7 +319,7 @@ public class GameStates : MonoBehaviour
     /// Check if there is one player left in the round
     /// </summary>
     /// <returns></returns>
-    bool onePlayerInRound()
+    public bool onePlayerInRound()
     {
         int i = 0;
         foreach(Player x in playersInRound)
@@ -342,7 +342,7 @@ public class GameStates : MonoBehaviour
     /// <summary>
     /// Send an event to the big and small blind to take their initial bets
     /// </summary>
-    void takeInitalBets()
+    public void takeInitalBets()
     {
         eventSystem.TakeBigBet(playersInRound[bigBlind], bigBlindAmt);
         pot += bigBlindAmt;

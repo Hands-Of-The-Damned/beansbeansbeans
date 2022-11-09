@@ -15,9 +15,11 @@ public class PlayerEventPublisher : MonoBehaviour
         public bool fold;
         public bool raise;
         public int bet;
+        public Player thisPlayer;
 
-        public SendRoundDecision(bool didFold, bool willRaise,  int betAmt)
+        public SendRoundDecision(Player player ,bool didFold, bool willRaise,  int betAmt)
         {
+            thisPlayer = player;
             fold = didFold;
             raise = willRaise;
             bet = betAmt;
@@ -26,9 +28,9 @@ public class PlayerEventPublisher : MonoBehaviour
 
     public static event System.EventHandler<SendRoundDecision> RoundInfo;
 
-    public void SendRoundInfo(bool didFold, bool isRaise, int betAmt)
+    public void SendRoundInfo(Player player, bool didFold, bool isRaise, int betAmt)
     {
-        RoundInfo?.Invoke(this, new SendRoundDecision(didFold, isRaise, betAmt));
+        RoundInfo?.Invoke(this, new SendRoundDecision(player, didFold, isRaise, betAmt));
     }
 
 
