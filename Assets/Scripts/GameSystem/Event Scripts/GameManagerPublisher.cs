@@ -46,21 +46,21 @@ public class GameManagerPublisher : MonoBehaviour
     {
         public GameManagerPublisher eventSystem;
         public Player player;
-        public string card;
+        public Card card;
 
-        public DealToPlayerEvent(Player playerDeltTo, string cardName)
+        public DealToPlayerEvent(Player playerDeltTo, Card newCard)
         {
             player = playerDeltTo;
-            card = cardName;
+            card = newCard;
         }
     }
 
 
     public static event System.EventHandler<DealToPlayerEvent> Deal;
 
-    public void DealToPlayer(Player player, string cardName)
+    public void DealToPlayer(Player player, Card newCard)
     {
-        Deal?.Invoke(this, new DealToPlayerEvent(player, cardName));
+        Deal?.Invoke(this, new DealToPlayerEvent(player, newCard));
     }
 
 
