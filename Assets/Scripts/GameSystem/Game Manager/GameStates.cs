@@ -23,7 +23,7 @@ public class GameStates : MonoBehaviour
     Player[] players;
     Player[] playersInRound;
     Queue playerQueue;
-    Deck deck = new Deck();
+    Deck deck;
     bool allPlayersBigBlind = false;
     bool showDownBool;
     bool playerReply;
@@ -81,6 +81,7 @@ public class GameStates : MonoBehaviour
         playerQueue = new Queue();
         players = playersInGame;
         //Initialize game objects
+        deck = new Deck();
         //add more relevent game objects
 
         state = states.GameLoop;
