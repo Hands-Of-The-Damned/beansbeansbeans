@@ -9,8 +9,8 @@ public class GameManagerPublisher : MonoBehaviour
     /* EVENT 1
      * Betting Round Event
      * send current pot ammount, current bet ammount, current betting round, string of current players turn
-     */ 
-     
+     */
+
 
     public class SendBettingRoundInfoEvent
     {
@@ -40,8 +40,8 @@ public class GameManagerPublisher : MonoBehaviour
     /* EVENT 2
      * Send Delt Card Event
      * Send delt card to a player
-     */ 
-     
+     */
+
     public class DealToPlayerEvent
     {
         public GameManagerPublisher eventSystem;
@@ -63,6 +63,59 @@ public class GameManagerPublisher : MonoBehaviour
         Deal?.Invoke(this, new DealToPlayerEvent(player, newCard));
     }
 
+
+
+    /* EVENT 3
+    * Initial Bet: Big Blind 
+    * Take bet from big blind
+    */
+
+    public class BigBlindBetEvent
+    {
+        public GameManagerPublisher eventSystem;
+        public int bet;
+        public Player player;
+
+        public BigBlindBetEvent(Player bigBlind, int betAmount)
+        {
+            player = bigBlind;
+            bet = betAmount;
+        }
+    }
+
+    public static event System.EventHandler<BigBlindBetEvent> BigBlind;
+
+    public void TakeBigBet(Player player, int bet)
+    {
+        BigBlind?.Invoke(this, new BigBlindBetEvent(player, bet));
+    }
+
+
+
+    /* EVENT 4
+    * Initial Bet: Small Blind 
+    * Take bet from small blind
+    */
+
+    public class SmallBlindBetEvent
+    {
+        public GameManagerPublisher eventSystem;
+        public int bet;
+        public Player player;
+
+        public SmallBlindBetEvent(Player smallBlind, int betAmount)
+        {
+            player = smallBlind;
+            bet = betAmount;
+        }
+    }
+
+    public static event System.EventHandler<SmallBlindBetEvent> SmallBlind;
+
+    public void TakeSmallBet(Player player, int bet)
+    {
+        SmallBlind?.Invoke(this, new SmallBlindBetEvent(player, bet));
+    }
 
     /* EVENT SomeNumber
      * General Major Arcana
@@ -89,10 +142,10 @@ public class GameManagerPublisher : MonoBehaviour
     /* EVENT HANDLE    
     * Game Start Event
     * receive an array of the players in the game to initialize the game
-    */ 
-    
+    */
+
 
 
 
 }
-    
+

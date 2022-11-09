@@ -23,19 +23,29 @@ public class GameStates : MonoBehaviour
     Player[] players;
     Player[] playersInRound;
     Queue playerQueue;
-    Deck deck;
+    Deck deck = new Deck();
     bool allPlayersBigBlind = false;
     bool showDownBool;
+    bool playerReply;
     int bigBlind;
     int smallBlind;
     int round;
+    int pot;
+    int bet;
+    int smallBlindAmt;
+    int bigBlindAmt;
 
     void Start()
     {
         bigBlind = 0;
         smallBlind = players.Length-1;
         showDownBool = false;
+        playerReply = false;
         round = 1;
+        pot = 0;
+        bet = 0;
+        smallBlindAmt = 1;
+        bigBlindAmt = 2;
     }
 
     void Update()
@@ -47,7 +57,7 @@ public class GameStates : MonoBehaviour
                 break;
 
             case states.GameLoop:
-                gameLoop(playerQueue, deck);
+                gameLoop();
                 break;
 
             case states.EndGame:
@@ -66,55 +76,57 @@ public class GameStates : MonoBehaviour
     /// </summary>
     /// <param name="players"></param>
     //might need to change return type
-    void gameInitialize(Player[] players)
+    void gameInitialize(Player[] playersInGame)
     {
         playerQueue = new Queue();
-
+        players = playersInGame;
         //Initialize game objects
-        Deck deck = new Deck();
         //add more relevent game objects
 
         state = states.GameLoop;
     }
 
 
-    void gameLoop(Queue players, Deck deck)
+    void gameLoop()
     {
         while (!allPlayersBigBlind)
         {
             //Play the game 
             deck.shuffle();
             setPlayersInRound();
-            setQueue();
-            //take bet from big and small blind
+            takeInitalBets();
 
             //Deal the first 5 cards
             initialDeal();
             while (!showDownBool)
             {
+                setQueue();
                 foreach (Player x in playerQueue)
                 {
                     //send event into void declaring which players turn it is
-                    //wait for player to send the event with decision info
-                    //do something with the info packet
+                    eventSystem.SendRoundInfo(x, bet, pot, round);
+                    //wait for reply
+                    while (!playerReply) { }
+                    playerReply = false;
 
                 }
 
+                //check if there is one player left in the round
                 if (onePlayerInRound()){
                     showDownBool = true;
                 }
-
+                //Check if we delt 8 cards to all players
                 if(round > 3)
                 {
                     showDownBool = true;
                 }
                 round++;
-                //deal all players 1 card
+                //Once players play their hand deal all players 1 card
                 foreach(Player x in playersInRound)
                 {
                     if(x != null)
                     {
-                        dealToPlayer(1, x);
+                        eventSystem.DealToPlayer(x, dealToPlayer(1, x));
                     }
                 }
             }
@@ -324,6 +336,22 @@ public class GameStates : MonoBehaviour
         {
             return true;
         }
+    }
+
+    /// <summary>
+    /// Send an event to the big and small blind to take their initial bets
+    /// </summary>
+    void takeInitalBets()
+    {
+        eventSystem.TakeBigBet(playersInRound[bigBlind], bigBlindAmt);
+        pot += bigBlindAmt;
+
+        if(playersInRound[bigBlind] != null)
+        {
+            eventSystem.TakeSmallBet(playersInRound[smallBlind], smallBlindAmt);
+            pot += smallBlindAmt;
+        }
+        
     }
 }
 
