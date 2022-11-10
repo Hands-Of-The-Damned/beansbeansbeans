@@ -67,6 +67,7 @@ public class GameStates : MonoBehaviour
     {
     //Subscribe to events
         Player.RoundInfo += Player_RoundInfo;
+        TempGameStart.StartGame += TempGameStart_StartGame;
 
     }
 
@@ -74,6 +75,7 @@ public class GameStates : MonoBehaviour
     {
         //Unsubscribe to events
         Player.RoundInfo += Player_RoundInfo;
+        TempGameStart.StartGame -= TempGameStart_StartGame;
     }
 
     void Update()
@@ -561,7 +563,10 @@ public class GameStates : MonoBehaviour
     * receive list of the players in the game to initialize the game
     */
 
-    //private void StartGame(object sender,)
+    private void TempGameStart_StartGame(object sender, TempGameStart.StartGameEvent args)
+    {
+        gameInitialize(args.players);
+    }
 
     /* EVENT HANDLE    
    * Player Betting Round Event
