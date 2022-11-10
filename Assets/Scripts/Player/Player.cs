@@ -40,7 +40,7 @@ public class Player : MonoBehaviour
         GameStates.BettingRoundInfo += GameStates_BettingRoundInfo;
         GameStates.BigBlind += GameStates_BigBlindBetEvent;
         GameStates.SmallBlind += GameStates_SmallBlindBetEvent;
-        GameStates.NewHand += GameStates_Newhand;
+        GameStates.NewHand += GameStates_NewHand;
     }
 
     public void OnDisable()
@@ -49,7 +49,7 @@ public class Player : MonoBehaviour
         GameStates.BettingRoundInfo -= GameStates_BettingRoundInfo;
         GameStates.BigBlind -= GameStates_BigBlindBetEvent;
         GameStates.SmallBlind -= GameStates_SmallBlindBetEvent;
-        GameStates.NewHand -= GameStates_Newhand;
+        GameStates.NewHand -= GameStates_NewHand;
 
     }
 
@@ -105,7 +105,7 @@ public class Player : MonoBehaviour
 
 
     /********************************************************************
-     * EVENTS
+     *                              EVENTS
      ********************************************************************/
 
 
@@ -185,7 +185,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void GameStates_Newhand(object sender)
+    public void GameStates_NewHand(object sender, GameStates.NewHandEvent args)
     {
         this.hand.hand.Clear();
     }
