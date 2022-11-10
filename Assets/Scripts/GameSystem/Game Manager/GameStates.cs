@@ -7,26 +7,25 @@ using UnityEngine;
 
 public class GameStates : MonoBehaviour
 {
-    
-    GameObject Player;
 
     enum states
     {
         Initial,
-        GameLoop,
+        Deal,
+        PromptPlayer,
+        WaitForPlayer,
         Showdown,
         EndGame
     }
 
-    GameManagerPublisher eventSystem;
     states state = states.Initial;
-    Player[] players;
-    Player[] playersInRound;
-    Queue playerQueue;
-    Deck deck;
+    List<PlayerContainer> players;
+
+    int playerOrderIndex;
+    List<int> playerOrder;
+
+    public Deck deck;
     bool allPlayersBigBlind = false;
-    bool showDownBool;
-    public bool playerReply;
     int bigBlind;
     int smallBlind;
     int round;
@@ -35,29 +34,77 @@ public class GameStates : MonoBehaviour
     int smallBlindAmt;
     int bigBlindAmt;
 
+
+
+    public struct PlayerContainer{
+        public Player player;
+        public bool inRound;
+        public bool inGame;
+        public bool playedCurrentRound;
+        public bool hasBeenBigBlind;
+        public bool hasBeenSmallBlind;
+        public bool isBigBlind;
+        public bool isSmallBlind;
+        public int currency;
+
+    }
+
     void Start()
     {
+
         bigBlind = 0;
-        smallBlind = players.Length-1;
-        showDownBool = false;
-        playerReply = false;
+        smallBlind = players.Count -1;
         round = 1;
         pot = 0;
         bet = 0;
         smallBlindAmt = 1;
         bigBlindAmt = 2;
+        playerOrderIndex = 0;
+        checkGameState();
+    }
+
+    public void OnEnable()
+    {
+    //Subscribe to events
+        Player.RoundInfo += Player_RoundInfo;
+
+    }
+
+    public void OnDisable()
+    {
+        //Unsubscribe to events
+        Player.RoundInfo += Player_RoundInfo;
     }
 
     void Update()
     {
+        checkGameState();
+    }
+
+    #region Functions
+    /// <summary>
+    /// This function is called to check if the game state is changed
+    /// </summary>
+    public void checkGameState()
+    {
         switch (state)
         {
             case states.Initial:
-                gameInitialize(players);
                 break;
 
-            case states.GameLoop:
-                gameLoop();
+            case states.Deal:
+                initialDeal();
+                break;
+
+            case states.PromptPlayer:
+                promptPlayer();
+                break;
+
+            case states.WaitForPlayer:
+                break;
+
+            case states.Showdown:
+                showDown();
                 break;
 
             case states.EndGame:
@@ -69,75 +116,42 @@ public class GameStates : MonoBehaviour
         }
     }
 
+    
     /// <summary>
-    /// This function will take a player array full of the players in the game.
-    /// The array is used to populate the player queue for the gameloop
-    /// Initilizes game objects
+    /// This function will take a player list of the players in the game.
     /// </summary>
-    /// <param name="players"></param>
+    /// <param name="newPlayers"></param>
     //might need to change return type
-    public void gameInitialize(Player[] playersInGame)
+    public void gameInitialize(List<Player> newPlayers)
     {
-        playerQueue = new Queue();
-        players = playersInGame;
-        //Initialize game objects
-        deck = new Deck();
-        //add more relevent game objects
-
-        state = states.GameLoop;
+        foreach(Player x in newPlayers)
+        {
+            PlayerContainer player;
+            player.player = x;
+            player.inGame = true;
+            player.inRound = true;
+            player.playedCurrentRound = false;
+            player.hasBeenBigBlind = false;
+            player.hasBeenSmallBlind = false;
+            player.isBigBlind = false;
+            player.isSmallBlind = false;
+            player.currency = x.currency;
+        }
+        state = states.Deal;
     }
 
-
-    public void gameLoop()
+    /// <summary>
+    /// Prompt next player to play their hand
+    /// </summary>
+    public void promptPlayer()
     {
-        while (!allPlayersBigBlind)
+        if(round > 3)
         {
-            //Play the game 
-            deck.shuffle();
-            setPlayersInRound();
-            takeInitalBets();
-
-            //Deal the first 5 cards
-            initialDeal();
-            while (!showDownBool)
-            {
-                setQueue();
-                foreach (Player x in playerQueue)
-                {
-                    //send event into void declaring which players turn it is
-                    eventSystem.SendRoundInfo(x, bet, pot, round);
-                    //wait for reply
-                    while (!playerReply) { }
-                    playerReply = false;
-
-                }
-
-                //check if there is one player left in the round
-                if (onePlayerInRound()){
-                    showDownBool = true;
-                }
-                //Check if we delt 8 cards to all players
-                if(round > 3)
-                {
-                    showDownBool = true;
-                }
-                round++;
-                //Once players play their hand deal all players 1 card
-                foreach(Player x in playersInRound)
-                {
-                    if(x != null)
-                    {
-                        eventSystem.DealToPlayer(x, dealToPlayer(1, x));
-                    }
-                }
-            }
-            //Do showdown
-            showDown();
-            allPlayersBigBlind = updateBigBlind();
-            round = 0;
-           
+            state = states.Showdown;
         }
-        state = states.EndGame;
+        SendRoundInfo(players[playerOrder[playerOrderIndex]].player, bet, pot, round);
+        incrementPlayerOrder();
+        state = states.WaitForPlayer;
     }
 
     /// <summary>
@@ -146,7 +160,7 @@ public class GameStates : MonoBehaviour
     public void showDown()
     {
         //evaluate hands and declare a winner for the round, maybe use an event for this
-        showDownBool = false;
+        state = states.WaitForPlayer;
     }
 
     /// <summary>
@@ -177,11 +191,11 @@ public class GameStates : MonoBehaviour
     /// <param name="player"></param>
     public void removePlayerFormRound(Player player)
     {
-        for(int i = 0; i < playersInRound.Length; i++)
+        for(int i = 0; i < players.Count; i++)
         {
-            if(player == playersInRound[i])
+            if(players[i].player == player)
             {
-                playersInRound[i] = null;
+                players[i].inRound.Equals(false);
             }
         }
     }
@@ -192,11 +206,11 @@ public class GameStates : MonoBehaviour
     /// <param name="player"></param>
     public void removePlayerFromGame(Player player)
     {
-        for (int i = 0; i < players.Length; i++)
+        for (int i = 0; i < players.Count; i++)
         {
-            if (player == players[i])
+            if (players[i].player == player)
             {
-                players[i] = null;
+                players[i].inGame.Equals(false);
             }
         }
     }
@@ -209,134 +223,133 @@ public class GameStates : MonoBehaviour
     {
         for (int i = 0; i <= 5; i++)
         {
-            foreach (Player x in playersInRound)
+            foreach (PlayerContainer x in players)
             {
-                if(x != null)
+                if(x.inRound)
                 {
-                    eventSystem.DealToPlayer(x, dealToPlayer(1, x));
+                    DealToPlayer(x.player, dealToPlayer(1, x.player));
                 }
             }
         }
+        takeInitalBets();
+        state = states.PromptPlayer;
     }
 
-
     /// <summary>
-    /// Reset the queue with @param player at the end of queue
+    /// Reset the play order list
     /// </summary>
     /// <param name="player"></param>
-    public void resetQueue(Player player)
+    public void resetPlayOrder()
+    {
+        int j = playerOrder[playerOrderIndex];
+        playerOrder.Clear();
+        for(int i = j+1; i < players.Count; i++)
+        {
+            if (players[i].inRound)
+            {
+                playerOrder.Add(i);
+            }
+        }
+        for(int i = 0; i < j; i++)
+        {
+            if (players[i].inRound)
+            {
+                playerOrder.Add(i);
+            }
+        }
+        playerOrderIndex = 0;
+    }
+
+    /// <summary>
+    /// Increments the playerOrder int
+    /// checks if there is one player left
+    /// </summary>
+    public void incrementPlayerOrder()
     {
         int j = 0;
-        for (int i = 0; i < playersInRound.Length; i++)
+        foreach(PlayerContainer x in players)
         {
-            if (player == playersInRound[i])
+            if (x.inRound)
             {
-                j = i;
+                j++;
             }
         }
 
-        foreach(Player x in playerQueue)
+        if(j == 1)
         {
-            playerQueue.Enqueue(x);
+            state = states.Showdown;
         }
 
-        for (int i = j; i < playersInRound.Length; i++)
+        if(playerOrderIndex == j - 1)
         {
-            if (playersInRound[i] != null)
-            {
-                playerQueue.Enqueue(playersInRound[i]);
-            }
+            state = states.Showdown;
         }
-    }
-
-    /// <summary>
-    /// Set the queue with the current players in the round
-    /// </summary>
-    public void setQueue()
-    {
-        foreach (Player x in playersInRound)
+        else
         {
-            if (x != null)
-            {
-                playerQueue.Enqueue(x);
-            }
+            playerOrderIndex++;
         }
     }
 
     /// <summary>
-    /// Set the playersInRound array with the players that are in the players array
+    /// Sets the playOrder list
     /// </summary>
-    public void setPlayersInRound()
+    public void setPlayerOrder()
     {
-        
-            for(int i = 0; i < players.Length; i++)
+        int i = 0;
+        foreach (PlayerContainer x in players)
+        {
+            if (x.inRound == true)
             {
-            if (players[i] != null)
-            {
-                playersInRound[i] = players[i];
-                }
+                playerOrder.Add(i);
             }
-        
+            i++;
+        }
     }
 
     /// <summary>
     /// Update the big blind to the next player in the game
     /// </summary>
     /// <returns></returns>
-    public bool updateBigBlind()
+    public void updateBigBlind()
     {
-        bigBlind++;
-        if(bigBlind > players.Length-1)
+        foreach(PlayerContainer x in players)
         {
-            return true;
+            if(x.hasBeenBigBlind == false && x.inGame == true)
+            {
+                x.hasBeenBigBlind.Equals(true);
+                x.isBigBlind.Equals(true);
+                break;
+            }
+            x.isBigBlind.Equals(false);
         }
-        if(players[bigBlind] == null && bigBlind < players.Length-1)
-        {
-            updateBigBlind();
-        }
-        updateSmallBlind(bigBlind-1);
-        return false;
     }
 
     /// <summary>
-    /// Update the small blind based on current big blind
+    /// Update the small blind
     /// </summary>
     /// <param name="newSmallBlind"></param>
     public void updateSmallBlind(int newSmallBlind)
     {
-        smallBlind = newSmallBlind;
-        if (players[smallBlind] == null && smallBlind >= 0)
+        foreach (PlayerContainer x in players)
         {
-            updateSmallBlind(smallBlind - 1);
-        }
-        else
-        {
-            smallBlind = -1;
+            if (x.hasBeenSmallBlind == false && x.inGame == true)
+            {
+                x.hasBeenSmallBlind.Equals(true);
+                x.isSmallBlind.Equals(true);
+                break;
+            }
+            x.isBigBlind.Equals(false);
         }
     }
+    
 
     /// <summary>
-    /// Check if there is one player left in the round
+    /// Set small blind at the begining of the game
     /// </summary>
-    /// <returns></returns>
-    public bool onePlayerInRound()
+    public void setSmallBlind()
     {
-        int i = 0;
-        foreach(Player x in playersInRound)
-        {
-            if(x != null)
-            {
-                i++;
-            }
-        }
-        if (i > 1)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        players[players.Count - 1].isSmallBlind.Equals(true);
+        players[players.Count - 1].hasBeenSmallBlind.Equals(true);
     }
 
     /// <summary>
@@ -344,16 +357,243 @@ public class GameStates : MonoBehaviour
     /// </summary>
     public void takeInitalBets()
     {
-        eventSystem.TakeBigBet(playersInRound[bigBlind], bigBlindAmt);
-        pot += bigBlindAmt;
-
-        if(playersInRound[bigBlind] != null)
+        foreach(PlayerContainer x in players)
         {
-            eventSystem.TakeSmallBet(playersInRound[smallBlind], smallBlindAmt);
-            pot += smallBlindAmt;
+            if (x.inRound && x.isBigBlind && x.currency - bigBlindAmt > 0)
+            {
+                pot += bigBlindAmt;
+                x.currency.Equals(x.currency - bigBlindAmt);
+                TakeBigBet(x.player, bigBlindAmt);
+            }
+            if (x.inRound && x.isSmallBlind && x.currency - smallBlindAmt > 0)
+            {
+                pot += smallBlindAmt;
+                x.currency.Equals(x.currency - smallBlindAmt);
+                TakeSmallBet(x.player, smallBlindAmt);
+            }
         }
-        
     }
+
+    /// <summary>
+    /// Checks if every player has been the big blind
+    /// </summary>
+    /// <returns></returns>
+    public bool checkAllPlayersBigBlind()
+    {
+        foreach(PlayerContainer x in players)
+        {
+            if (!x.hasBeenBigBlind)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// Send event to players that there there is going to be a new hand
+    /// </summary>
+    public void newHand()
+    {
+         ClearHand();
+    }
+
+    #endregion
+
+    /*************************************************************************
+     * EVENTS
+     *************************************************************************/
+    #region Events
+    /* EVENT 1
+     * Betting Round Event
+     * send current pot ammount, current bet ammount, current betting round, string of current players turn
+     */
+
+
+    public class SendBettingRoundInfoEvent
+    {
+        GameStates eventSystem;
+        public Player player;
+        public int currentBet;
+        public int currentPot;
+        public int currentRound;
+
+        public SendBettingRoundInfoEvent(Player playersTurn, int bet, int pot, int round)
+        {
+            player = playersTurn;
+            currentBet = bet;
+            currentPot = pot;
+            currentRound = round;
+        }
+    }
+
+    public static event System.EventHandler<SendBettingRoundInfoEvent> BettingRoundInfo;
+
+    public void SendRoundInfo(Player player, int bet, int pot, int round)
+    {
+        BettingRoundInfo?.Invoke(this, new SendBettingRoundInfoEvent(player, bet, pot, round));
+    }
+
+
+    /* EVENT 2
+     * Send Delt Card Event
+     * Send delt card to a player
+     */
+
+    public class DealToPlayerEvent
+    {
+        public GameStates eventSystem;
+        public Player player;
+        public Card card;
+
+        public DealToPlayerEvent(Player playerDeltTo, Card newCard)
+        {
+            player = playerDeltTo;
+            card = newCard;
+        }
+    }
+
+
+    public static event System.EventHandler<DealToPlayerEvent> Deal;
+
+    public void DealToPlayer(Player player, Card newCard)
+    {
+        Deal?.Invoke(this, new DealToPlayerEvent(player, newCard));
+    }
+
+
+
+    /* EVENT 3
+    * Initial Bet: Big Blind 
+    * Take bet from big blind
+    */
+
+    public class BigBlindBetEvent
+    {
+        public GameStates eventSystem;
+        public int bet;
+        public Player player;
+
+        public BigBlindBetEvent(Player bigBlind, int betAmount)
+        {
+            player = bigBlind;
+            bet = betAmount;
+        }
+    }
+
+    public static event System.EventHandler<BigBlindBetEvent> BigBlind;
+
+    public void TakeBigBet(Player player, int bet)
+    {
+        BigBlind?.Invoke(this, new BigBlindBetEvent(player, bet));
+    }
+
+
+
+    /* EVENT 4
+    * Initial Bet: Small Blind 
+    * Take bet from small blind
+    */
+
+    public class SmallBlindBetEvent
+    {
+        public GameStates eventSystem;
+        public int bet;
+        public Player player;
+
+        public SmallBlindBetEvent(Player smallBlind, int betAmount)
+        {
+            player = smallBlind;
+            bet = betAmount;
+        }
+    }
+
+    public static event System.EventHandler<SmallBlindBetEvent> SmallBlind;
+
+    public void TakeSmallBet(Player player, int bet)
+    {
+        SmallBlind?.Invoke(this, new SmallBlindBetEvent(player, bet));
+    }
+
+    /* EVENT 5
+    * Clear the players hand for next round
+    */
+
+    public class NewHandEvent
+    {
+        public GameStates eventSystem;
+
+
+        public NewHandEvent()
+        {
+        }
+    }
+
+    public static event System.EventHandler<NewHandEvent> NewHand;
+
+    public void ClearHand()
+    {
+        NewHand?.Invoke(this, new NewHandEvent());
+    }
+
+    /* EVENT SomeNumber
+     * General Major Arcana
+     * Probably different events
+     * Tell players and GUI what major arcana was played and its effects, send effects to players and GUI
+     */
+
+
+
+    /*________________Event Handles__________________*/
+
+
+
+
+    /* EVENT HANDLE
+     * Major Arcana Effects
+     * receive effects: force player to fold for a round, deal cards to a player, force a bet increase
+     * There will be others
+     * May have to be separate events
+     */
+
+    /* EVENT HANDLE    
+    * Game Start Event
+    * receive list of the players in the game to initialize the game
+    */
+
+    //private void StartGame(object sender,)
+
+    /* EVENT HANDLE    
+   * Player Betting Round Event
+   * receive bet amount, if player folded, if player played major arcana
+   */
+
+    private void Player_RoundInfo(object sender, Player.SendRoundDecision args)
+    {
+        if (args.fold)
+        {
+            //remove player from queue
+            removePlayerFormRound(args.thisPlayer);
+        }
+        else if (args.raise)
+        {
+            //player raised
+            bet = args.bet;
+            pot += args.bet;
+            resetPlayOrder();
+
+        }
+        else //Player checked the bet
+        {
+            pot += args.bet;
+        }
+        state = states.PromptPlayer;
+    }
+
+
+
+   
+    #endregion Events
 }
 
 
