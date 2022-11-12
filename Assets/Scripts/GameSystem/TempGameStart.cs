@@ -18,6 +18,7 @@ public class TempGameStart : MonoBehaviour
 
     public class StartGameEvent
     {
+        public TempGameStart eventSystem;
         public List<Player> players;
 
         public StartGameEvent(List<Player> newPlayers)

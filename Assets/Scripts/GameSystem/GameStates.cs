@@ -26,8 +26,6 @@ public class GameStates : MonoBehaviour
 
     public Deck deck;
     bool allPlayersBigBlind = false;
-    int bigBlind;
-    int smallBlind;
     int round;
     public int pot;
     public int bet;
@@ -51,9 +49,6 @@ public class GameStates : MonoBehaviour
 
     void Start()
     {
-
-        bigBlind = 0;
-        smallBlind = players.Count -1;
         round = 1;
         pot = 0;
         bet = 0;
@@ -67,7 +62,7 @@ public class GameStates : MonoBehaviour
     {
     //Subscribe to events
         Player.RoundInfo += Player_RoundInfo;
-        TempGameStart.StartGame += TempGameStart_StartGame;
+        //TempGameStart.StartGame += TempGameStart_StartGame;
 
     }
 
@@ -75,7 +70,7 @@ public class GameStates : MonoBehaviour
     {
         //Unsubscribe to events
         Player.RoundInfo += Player_RoundInfo;
-        TempGameStart.StartGame -= TempGameStart_StartGame;
+        //TempGameStart.StartGame -= TempGameStart_StartGame;
     }
 
     void Update()
@@ -150,6 +145,7 @@ public class GameStates : MonoBehaviour
         if(round > 3)
         {
             state = states.Showdown;
+            return;
         }
         SendRoundInfo(players[playerOrder[playerOrderIndex]].player, bet, pot, round);
         incrementPlayerOrder();
@@ -182,7 +178,7 @@ public class GameStates : MonoBehaviour
     /// <param name="numCards"></param>
     /// <param name="player"></param>
     /// <returns></returns>
-    public Card dealToPlayer(int numCards, Player player)
+    public Card dealToPlayer(int numCards)
     {
         return deck.deal(numCards)[0];
     }
@@ -229,7 +225,7 @@ public class GameStates : MonoBehaviour
             {
                 if(x.inRound)
                 {
-                    DealToPlayer(x.player, dealToPlayer(1, x.player));
+                    DealToPlayer(x.player, dealToPlayer(1));
                 }
             }
         }
@@ -268,8 +264,13 @@ public class GameStates : MonoBehaviour
     /// </summary>
     public void incrementPlayerOrder()
     {
+         playerOrderIndex++;
+    }
+
+    public void checkForShowdown()
+    {
         int j = 0;
-        foreach(PlayerContainer x in players)
+        foreach (PlayerContainer x in players)
         {
             if (x.inRound)
             {
@@ -277,18 +278,9 @@ public class GameStates : MonoBehaviour
             }
         }
 
-        if(j == 1)
+        if (j == 1)
         {
             state = states.Showdown;
-        }
-
-        if(playerOrderIndex == j - 1)
-        {
-            state = states.Showdown;
-        }
-        else
-        {
-            playerOrderIndex++;
         }
     }
 
