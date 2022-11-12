@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 public class handRecognition : MonoBehaviour
@@ -16,11 +17,11 @@ public class handRecognition : MonoBehaviour
     //Get player hands at the table
     //Rank a set of player hands
     //Implement following hands: (ranking is highest(10) to lowest (1))
-    //Royal Flush, Straight Flush (straight + flush), Four-of-a-kind, Full House (Two-pair + three of a kind), Flush, Straight, Three of a kind, Two pair, Pair, High Card
+    //Royal Flush*, Straight Flush (straight + flush), Four-of-a-kind*, Full House (Two-pair + three of a kind), Flush*, Straight*, Three of a kind*, Two pair, Pair*, High Card*
     //need to check for rank and suits, mainly for easier processing
-    
+
     //lib to check for straights
-    int[][] straightLib = new int[][] { 
+    int[][] straightLib = new int[][] {
         new int [] { 1, 2, 3, 4, 5 },
         new int [] { 2, 3, 4, 5, 6 },
         new int [] { 3, 4, 5, 6, 7 },
@@ -34,7 +35,16 @@ public class handRecognition : MonoBehaviour
         new int [] { 11, 12, 13, 14, 1 },
         new int [] { 12, 13, 14, 1, 2 },
         new int [] { 13, 14, 1, 2, 3 },
-        new int [] { 14, 1, 2, 3, 4 } 
+        new int [] { 14, 1, 2, 3, 4 }
+    };
+
+    //Represents all possible flushes
+    int[][] flushLib = new int[][]
+    {
+        new int [] {1, 1, 1, 1, 1},
+        new int [] {2, 2, 2, 2, 2},
+        new int [] {3, 3, 3, 3, 3},
+        new int [] {4, 4, 4, 4, 4}
     };
 
     //royal flush gets it's own check
@@ -60,7 +70,6 @@ public class handRecognition : MonoBehaviour
             {
                 return true;
             }
-            
         }
         return false;
     }
@@ -68,14 +77,15 @@ public class handRecognition : MonoBehaviour
     //check for flush
     bool FlushCheck(int[] ranks)
     {
-        if (ranks.Distinct().Count() == 1)
+        for (int i = 0; i < flushLib.Length; i++)
         {
-            return true;
+            if (ranks == flushLib[i])
+            {
+                return true;
+            }
         }
-        else
-        {
-            return false;
-        }
+        return false;
+        
     }
 
     //check for both flush and straight
@@ -115,6 +125,74 @@ public class handRecognition : MonoBehaviour
         return flag;
     }
 
+    bool ThreeOfAKindCheck(int[] ranks)
+    {
+        bool flag = false;
+        for (int i = 1; i <= 14; i++)
+        {
+            int count = 0;
+            for (int j = 0; j < ranks.Length; j++)
+            {
+                if (ranks[j] == i)
+                {
+                    count++;
+                }
+
+                if (count == 3)
+                {
+                    flag = true;
+                }
+            }
+        }
+
+        return flag;   
+    }
+
+    bool PairCheck(int[] ranks)
+    {
+        bool flag = false;
+        for (int i = 1; i <= 14; i++)
+        {
+            int count = 0;
+            for (int j = 0; j < ranks.Length; j++)
+            {
+                if (ranks[j] == i)
+                {
+                    count++;
+                }
+
+                if (count == 2)
+                {
+                    flag = true;
+                }
+            }
+        }
+
+        return flag;
+    }
+
+    bool TwoPairCheck(int[] ranks)
+    {
+        bool flag = false;
+        int rankPair1;
+        for(int i = 1; i <= 14; i++)
+        {
+            int count = 0;
+            for (int j = 0; j < ranks.Length; j++)
+            {
+                if (ranks[j] == i)
+                {
+                    count++;
+                }
+
+                if (count == 2)
+                {
+                    flag = true;
+                }
+            }
+        }
+        return flag;
+    }
     //faster int.parse code
     public static int IntParseFast(string value)
     {
