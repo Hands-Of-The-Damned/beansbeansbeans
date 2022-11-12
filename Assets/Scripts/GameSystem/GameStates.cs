@@ -12,6 +12,7 @@ public class GameStates : MonoBehaviour
     {
         Initial,
         Deal,
+        DealNextCard,
         PromptPlayer,
         WaitForPlayer,
         Showdown,
@@ -62,6 +63,7 @@ public class GameStates : MonoBehaviour
     {
     //Subscribe to events
         Player.RoundInfo += Player_RoundInfo;
+        Player.ShowDown += Player_ShowDownResponse;
         //TempGameStart.StartGame += TempGameStart_StartGame;
 
     }
@@ -69,7 +71,8 @@ public class GameStates : MonoBehaviour
     public void OnDisable()
     {
         //Unsubscribe to events
-        Player.RoundInfo += Player_RoundInfo;
+        Player.RoundInfo -= Player_RoundInfo;
+        Player.ShowDown -= Player_ShowDownResponse;
         //TempGameStart.StartGame -= TempGameStart_StartGame;
     }
 
@@ -79,6 +82,8 @@ public class GameStates : MonoBehaviour
     }
 
     #region Functions
+    #region StateFunctions
+
     /// <summary>
     /// This function is called to check if the game state is changed
     /// </summary>
@@ -91,6 +96,10 @@ public class GameStates : MonoBehaviour
 
             case states.Deal:
                 initialDeal();
+                break;
+
+            case states.DealNextCard:
+                dealNextCard();
                 break;
 
             case states.PromptPlayer:
@@ -134,7 +143,45 @@ public class GameStates : MonoBehaviour
             player.isSmallBlind = false;
             player.currency = x.currency;
         }
+        setSmallBlind();
         state = states.Deal;
+    }
+
+    /// <summary>
+    /// Deal the first five cards to the players 1 at a time
+    /// </summary>
+    /// <param name="players"></param>
+    public void initialDeal()
+    {
+        for (int i = 0; i <= 5; i++)
+        {
+            foreach (PlayerContainer x in players)
+            {
+                if (x.inRound)
+                {
+                    DealToPlayer(x.player, dealToPlayer(1));
+                }
+            }
+        }
+        updateBigBlind();
+        takeInitalBets();
+        state = states.PromptPlayer;
+    }
+
+    /// <summary>
+    /// Deals the next card to all players
+    /// </summary>
+    public void dealNextCard()
+    {
+        foreach (PlayerContainer x in players)
+        {
+            if (x.inRound)
+            {
+                DealToPlayer(x.player, dealToPlayer(1));
+            }
+        }
+        resetPlayedCurrentRound();
+        state = states.PromptPlayer;
     }
 
     /// <summary>
@@ -142,22 +189,33 @@ public class GameStates : MonoBehaviour
     /// </summary>
     public void promptPlayer()
     {
+        checkForShowdown();
         if(round > 3)
         {
             state = states.Showdown;
+            updateSmallBlind();
+            return;
+        }
+        if(playerOrderIndex == -1)
+        {
+            setPlayerOrder();
+            state = states.DealNextCard;
             return;
         }
         SendRoundInfo(players[playerOrder[playerOrderIndex]].player, bet, pot, round);
-        incrementPlayerOrder();
         state = states.WaitForPlayer;
+        incrementPlayerOrder();
     }
-
+    
     /// <summary>
     /// Use hand regocnition to declare a winner, move big and small blind, increase round count, set state back to GameLoop
     /// </summary>
     public void showDown()
     {
         //evaluate hands and declare a winner for the round, maybe use an event for this
+        resetPlayersInRound();
+        resetPlayedCurrentRound();
+        round = 1;
         state = states.WaitForPlayer;
     }
 
@@ -172,6 +230,11 @@ public class GameStates : MonoBehaviour
 
     }
 
+
+
+    #endregion
+
+    #region HelperFunctions
     /// <summary>
     /// Deal @param numCards cards to @param player
     /// </summary>
@@ -182,6 +245,21 @@ public class GameStates : MonoBehaviour
     {
         return deck.deal(numCards)[0];
     }
+
+    /// <summary>
+    /// Set inRound bool of all players still in the game to true
+    /// </summary>
+    public void resetPlayersInRound()
+    {
+        foreach(PlayerContainer x in players)
+        {
+            if (x.inGame)
+            {
+                x.inRound.Equals(true);
+            }
+        }
+    }
+
 
     /// <summary>
     /// Remove @param player form the current round
@@ -214,27 +292,21 @@ public class GameStates : MonoBehaviour
     }
 
     /// <summary>
-    /// Deal the first five cards to the players 1 at a time
+    /// Reset the playedcurrentround bool for players in round
     /// </summary>
-    /// <param name="players"></param>
-    public void initialDeal()
+    public void resetPlayedCurrentRound()
     {
-        for (int i = 0; i <= 5; i++)
+        foreach(PlayerContainer x in players)
         {
-            foreach (PlayerContainer x in players)
+            if (x.inRound)
             {
-                if(x.inRound)
-                {
-                    DealToPlayer(x.player, dealToPlayer(1));
-                }
+                x.playedCurrentRound.Equals(false);
             }
         }
-        takeInitalBets();
-        state = states.PromptPlayer;
     }
 
     /// <summary>
-    /// Reset the play order list
+    /// Reset the play order list after raise
     /// </summary>
     /// <param name="player"></param>
     public void resetPlayOrder()
@@ -259,14 +331,21 @@ public class GameStates : MonoBehaviour
     }
 
     /// <summary>
-    /// Increments the playerOrder int
-    /// checks if there is one player left
+    /// Increments the playerOrder int, if at the end of the player order increment round
     /// </summary>
     public void incrementPlayerOrder()
     {
          playerOrderIndex++;
+        if(playerOrderIndex >= playerOrder.Count)
+        {
+            playerOrderIndex = -1;
+            round++;
+        }
     }
 
+    /// <summary>
+    /// Check if there is one player in the current round
+    /// </summary>
     public void checkForShowdown()
     {
         int j = 0;
@@ -298,6 +377,7 @@ public class GameStates : MonoBehaviour
             }
             i++;
         }
+        playerOrderIndex = 0;
     }
 
     /// <summary>
@@ -308,7 +388,7 @@ public class GameStates : MonoBehaviour
     {
         foreach(PlayerContainer x in players)
         {
-            if(x.hasBeenBigBlind == false && x.inGame == true)
+            if(x.hasBeenBigBlind == false && x.inGame == true && x.inRound == true)
             {
                 x.hasBeenBigBlind.Equals(true);
                 x.isBigBlind.Equals(true);
@@ -321,12 +401,11 @@ public class GameStates : MonoBehaviour
     /// <summary>
     /// Update the small blind
     /// </summary>
-    /// <param name="newSmallBlind"></param>
-    public void updateSmallBlind(int newSmallBlind)
+    public void updateSmallBlind()
     {
         foreach (PlayerContainer x in players)
         {
-            if (x.hasBeenSmallBlind == false && x.inGame == true)
+            if (x.hasBeenSmallBlind == false && x.inGame == true && x.inRound == true)
             {
                 x.hasBeenSmallBlind.Equals(true);
                 x.isSmallBlind.Equals(true);
@@ -391,6 +470,8 @@ public class GameStates : MonoBehaviour
     {
          ClearHand();
     }
+
+    #endregion
 
     #endregion
 
@@ -530,6 +611,27 @@ public class GameStates : MonoBehaviour
         NewHand?.Invoke(this, new NewHandEvent());
     }
 
+    /* EVENT 6
+    * Tell players that showdown is happening
+    */
+
+    public class ShowDownEvent
+    {
+        public GameStates eventSystem;
+
+        public ShowDownEvent()
+        {
+
+        }
+    }
+
+    public static event System.EventHandler<ShowDownEvent> ShowDown;
+
+    public void NewShowDown()
+    {
+        ShowDown?.Invoke(this, new ShowDownEvent());
+    }
+
     /* EVENT SomeNumber
      * General Major Arcana
      * Probably different events
@@ -541,14 +643,6 @@ public class GameStates : MonoBehaviour
     /*________________Event Handles__________________*/
 
 
-
-
-    /* EVENT HANDLE
-     * Major Arcana Effects
-     * receive effects: force player to fold for a round, deal cards to a player, force a bet increase
-     * There will be others
-     * May have to be separate events
-     */
 
     /* EVENT HANDLE    
     * Game Start Event
@@ -587,9 +681,27 @@ public class GameStates : MonoBehaviour
         state = states.PromptPlayer;
     }
 
+    /* EVENT HANDLE    
+   * Showdown Response
+   * continue to the next hand
+   */
 
+    private void Player_ShowDownResponse(object sender, Player.ShowDownResponse args)
+    {
+        newHand();
+        pot = 0;
+        bet = 0;
+        state = states.Deal;
 
-   
+    }
+
+    /* EVENT HANDLE
+   * Major Arcana Effects
+   * receive effects: force player to fold for a round, deal cards to a player, force a bet increase
+   * There will be others
+   * May have to be separate events
+   */
+
     #endregion Events
 }
 

@@ -140,6 +140,22 @@ public class Player : MonoBehaviour
     }
 
 
+    public class ShowDownResponse
+    {
+        public Player eventSystem;
+        public ShowDownResponse()
+        {
+
+        }
+    }
+
+    public static event System.EventHandler<ShowDownResponse> ShowDown;
+
+    public void SendShowDownResponse()
+    {
+        ShowDown?.Invoke(this, new ShowDownResponse());
+    }
+
     /* EVENT 2
      * Play major arcana
      * play some major arcana card
