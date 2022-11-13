@@ -100,8 +100,6 @@ public class handRecognition : MonoBehaviour
         int AmtSuitToWin = 5;
         int AmtRankToWin = 5;
         int winCond = 5;
-        bool suitFlag = false;
-        bool rankFlag = false;
         bool flag = false;
 
         //Lib for Royal Flush Ranks
@@ -114,6 +112,7 @@ public class handRecognition : MonoBehaviour
         //What if player rank wild and suit wild dont match up? Choose the higher number in royal flush case
         if(AmtRankToWin > AmtSuitToWin)
         {
+            winCond = AmtRankToWin;
             winCond = AmtRankToWin;
         }
         if(AmtRankToWin < AmtSuitToWin)
@@ -134,7 +133,7 @@ public class handRecognition : MonoBehaviour
                     count++;
                 }
 
-                if(count == winCond)
+                if(count >= winCond)
                 {
                     flag = true;
                 }
@@ -161,7 +160,7 @@ public class handRecognition : MonoBehaviour
                 {
                     check++;
                 }
-                if(check == winCond)
+                if(check >= winCond)
                 {
                     flag = true;
                 }
@@ -187,7 +186,7 @@ public class handRecognition : MonoBehaviour
                 {
                     check++;
                 }
-                if (check == winCond)
+                if (check >= winCond)
                 {
                     flag = true;
                 }
@@ -228,7 +227,7 @@ public class handRecognition : MonoBehaviour
                     count++;
                 }
 
-                if (count == winCond)
+                if (count >= winCond)
                 {
                     flag = true;
                 }
@@ -255,7 +254,7 @@ public class handRecognition : MonoBehaviour
                     count++;
                 }
 
-                if (count == winCond)
+                if (count >= winCond)
                 {
                     flag = true;
                 }
@@ -280,7 +279,7 @@ public class handRecognition : MonoBehaviour
                     count++;
                 }
 
-                if (count == winCond)
+                if (count >= winCond)
                 {
                     flag = true;
                 }
@@ -293,37 +292,91 @@ public class handRecognition : MonoBehaviour
     //take entire player hand, check for 2 pairs
     bool TwoPairCheck(int[] ranks)
     {
-        bool flag = false;
-        int rankPair1;
+        bool flag1 = false;
+        bool flag2 = false;
+        int count = 0;
+        int winCond = 2 - wildRankCount;
         for(int i = 1; i <= 14; i++)
         {
-            int count = 0;
+            count = 0;
             for (int j = 0; j < ranks.Length; j++)
             {
                 if (ranks[j] == i)
                 {
                     count++;
                 }
+            }
 
-                if (count == 2)
-                {
-                    flag = true;
-                }
+
+            if ((count >= winCond) && !flag1)
+            {
+                flag1 = true;
+                count = 0;
+            }
+
+            if ((count >= winCond) && flag1)
+            {
+                flag2 = true;
             }
         }
-        return flag;
+
+        return flag1 && flag2;
     }
 
     //take entire player hand, check for 1 pair, and 1 three of a kind
     bool FullHouseCheck(int[] ranks)
     {
-        bool flag = false;
+        bool flag3P = false;
+        bool flag2P = false;
+        int count1 = 0;
 
-        return flag;
+        //target winCond
+        int winCond3P = 3 - wildRankCount;
+        int winCond2P = 2 - wildRankCount;
+
+        //iterate through each possible hand item
+        for (int i = 1; i <= 14; i++)
+        {
+            count1 = 0;
+            for (int j = 0; j < ranks.Length; j++)
+            {
+                //if there is a match, increment counter
+                if (ranks[j] == i)
+                {
+                    count1++;
+                }
+            }
+            //if winCond3P is detectd, flip relevant flags, and make winCond2P more difficult
+            if (count1 >= winCond3P && !flag3P)
+            {
+                flag3P = true;
+                winCond2P = winCond2P + 1;
+                count1 = 0;
+            }
+
+            else if (count1 >= winCond2P && !flag2P)
+            {
+                flag2P = true;
+                winCond3P = winCond3P + 1;
+                count1 = 0;
+            }
+
+            if (flag2P && count1 >= winCond3P)
+            {
+                flag3P = true;
+            }
+
+            else if (flag3P && count1 >= winCond2P)
+            {
+                flag2P = true;
+            }
+        }
+
+        return flag2P && flag3P;
     }
     
     /// <summary>
-    /// Please see Card.cs for more information on
+    /// Please see Card.cs for more information on card ranking info
     /// </summary>
     /// <param name="playerHand">The player hand that is to be analyzed, and given a ranking.</param>
     /// <returns>Returns a set of three integers [PokerHandRanking, HighCardRank, HighCardSuit]</returns>
