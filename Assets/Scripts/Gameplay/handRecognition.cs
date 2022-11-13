@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -47,48 +48,156 @@ public class handRecognition : MonoBehaviour
         new int [] {4, 4, 4, 4, 4}
     };
 
-    //royal flush gets it's own check
+    /// <summary>
+    /// Need to get playerHand info, and put it into an array of the same size for manipulation.
+    /// </summary>
+
+    public playerHand AnalyzedHand;
+
+    List<MinorArcana> PokerHand = new List<MinorArcana>();
+    List<MajorArcana> EffectsHand = new List<MajorArcana>();
+    List<int> PokerHandSuits = new List<int>();
+    List<int> PokerHandRanks = new List<int>(); 
+    int wildRankCount = 0;
+    int wildSuitCount = 0;
+    void getHandInfo()
+    {
+        //Get info for major and minor arcana handtypes
+        PokerHand.AddRange(AnalyzedHand.hand.OfType<MinorArcana>());
+        EffectsHand.AddRange(AnalyzedHand.hand.OfType<MajorArcana>());
+
+        //Sort PokerHand
+        PokerHand.Sort((x, y) => x.CardRank.CompareTo(y.CardRank));
+
+        //Get suits and ranks
+        for(int i = 0; i < PokerHand.Count; i++)
+        {
+            PokerHandSuits.Add(PokerHand[i].CardSuit);
+            PokerHandRanks.Add(PokerHand[i].CardRank);
+        }
+
+        //Get Wilds in hand 
+        for(int i = 0; i < EffectsHand.Count; i++)
+        {
+            if (EffectsHand[i].IsRankWild == true)
+            {
+                wildRankCount++;
+            }
+            if (EffectsHand[i].IsSuitWild == true)
+            {
+                wildSuitCount++;
+            }
+        }
+
+    }
+
+    /// <summary>
+    /// Only accepts a hand of 5. Preprocessing before a royal check must be done to ensure that the Cards passed are passed absolutely correctly, e.g. Will need check directly from player hand.
+    /// </summary>
     bool RoyalFlushCheck(int[] suits, int[] ranks)
     {
-        //check if all suits are the same.
-        if((suits == new int[] {11, 12, 13, 14, 1}) && (ranks.Distinct().Count() == 1)){
-            return true;
-        }
-        else
+        int count = 0;
+        int AmtSuitToWin = 5;
+        int AmtRankToWin = 5;
+        int winCond = 5;
+        bool suitFlag = false;
+        bool rankFlag = false;
+        bool flag = false;
+
+        //Lib for Royal Flush Ranks
+        int[] royalFlushRanks = new int[] { 11, 12, 13, 14, 1 };
+
+        //Wild handling
+        AmtRankToWin = AmtRankToWin - wildRankCount;
+        AmtSuitToWin = AmtSuitToWin - wildSuitCount;
+
+        //What if player rank wild and suit wild dont match up? Choose the higher number in royal flush case
+        if(AmtRankToWin > AmtSuitToWin)
         {
-            return false;
+            winCond = AmtRankToWin;
         }
+        if(AmtRankToWin < AmtSuitToWin)
+        {
+            winCond = AmtSuitToWin;
+        }
+
+        //Check flush lib first. It's bigger.
+        for (int i = 0;  i < flushLib.Length; i++)
+        {
+            //reset count to 0
+            count = 0;
+            for(int j = 0; j < flushLib[i].Length; j++)
+            {
+                //Compare flushlib against suits and ranks against RoyalFlush
+                if((flushLib[i][j] == suits[j]) && (royalFlushRanks[j] == ranks[j]))
+                {
+                    count++;
+                }
+
+                if(count == winCond)
+                {
+                    flag = true;
+                }
+
+            }
+        }
+
+        return flag;
     }
 
     //check for straights
-    bool StraightCheck(int[] suits)
+    bool StraightCheck(int[] ranks)
     {
-              
+        bool flag = false;
+        int check = 0;
+        int winCond = 5 - wildRankCount;
+
         for(int i = 0; i < straightLib.Length; i++)
         {
-            if(suits == straightLib[i])
+            check = 0;
+            for(int j = 0; j < straightLib[i].Length; j++)
             {
-                return true;
+                if(straightLib[i][j] == ranks[j])
+                {
+                    check++;
+                }
+                if(check == winCond)
+                {
+                    flag = true;
+                }
             }
+            
         }
-        return false;
+        return flag;
     }
 
     //check for flush
-    bool FlushCheck(int[] ranks)
+    bool FlushCheck(int[] suits)
     {
+        bool flag = false;
+        int check = 0;
+        int winCond = 5 - wildSuitCount;
+
         for (int i = 0; i < flushLib.Length; i++)
         {
-            if (ranks == flushLib[i])
+            check = 0;
+            for (int j = 0; j < flushLib[i].Length; j++)
             {
-                return true;
+                if (flushLib[i][j] == suits[j])
+                {
+                    check++;
+                }
+                if (check == winCond)
+                {
+                    flag = true;
+                }
             }
         }
-        return false;
+        return flag;
         
     }
 
-    //check for both flush and straight
+    //check for both flush and straight, will need to be refactored, most probably wrong (i.e. what if there's a flush and a straight but they're not the same cards? Check Royal Flush code
     bool StraightFlush(int[] suits, int[] ranks)
     {
         if (StraightCheck(suits) && FlushCheck(ranks))
@@ -102,12 +211,16 @@ public class handRecognition : MonoBehaviour
         }
     }
 
+    //check for four of a kind
     bool FourOfAKindCheck(int[] ranks)
     {
         bool flag = false;
+        int winCond = 4 - wildRankCount;
+        int count = 0;
+
         for(int i = 1; i <= 14; i++)
         {
-            int count = 0;
+            count = 0;
             for(int j = 0; j < ranks.Length; j++)
             {
                 if (ranks[j] == i)
@@ -115,7 +228,7 @@ public class handRecognition : MonoBehaviour
                     count++;
                 }
 
-                if (count == 4)
+                if (count == winCond)
                 {
                     flag = true;
                 }
@@ -125,12 +238,16 @@ public class handRecognition : MonoBehaviour
         return flag;
     }
 
+    //check for three of a kind
     bool ThreeOfAKindCheck(int[] ranks)
     {
         bool flag = false;
+        int winCond = 3 - wildRankCount;
+        int count = 0;
+
         for (int i = 1; i <= 14; i++)
         {
-            int count = 0;
+            count = 0;
             for (int j = 0; j < ranks.Length; j++)
             {
                 if (ranks[j] == i)
@@ -138,7 +255,7 @@ public class handRecognition : MonoBehaviour
                     count++;
                 }
 
-                if (count == 3)
+                if (count == winCond)
                 {
                     flag = true;
                 }
@@ -151,9 +268,11 @@ public class handRecognition : MonoBehaviour
     bool PairCheck(int[] ranks)
     {
         bool flag = false;
+        int winCond = 2 - wildRankCount;
+        int count = 0;
         for (int i = 1; i <= 14; i++)
         {
-            int count = 0;
+            count = 0;
             for (int j = 0; j < ranks.Length; j++)
             {
                 if (ranks[j] == i)
@@ -161,7 +280,7 @@ public class handRecognition : MonoBehaviour
                     count++;
                 }
 
-                if (count == 2)
+                if (count == winCond)
                 {
                     flag = true;
                 }
@@ -171,6 +290,7 @@ public class handRecognition : MonoBehaviour
         return flag;
     }
 
+    //take entire player hand, check for 2 pairs
     bool TwoPairCheck(int[] ranks)
     {
         bool flag = false;
@@ -193,15 +313,27 @@ public class handRecognition : MonoBehaviour
         }
         return flag;
     }
-    //faster int.parse code
-    public static int IntParseFast(string value)
+
+    //take entire player hand, check for 1 pair, and 1 three of a kind
+    bool FullHouseCheck(int[] ranks)
     {
-        int result = 0;
-        for (int i = 0; i < value.Length; i++)
-        {
-            char letter = value[i];
-            result = 10 * result + (letter - 48);
-        }
-        return result;
+        bool flag = false;
+
+        return flag;
+    }
+    
+    /// <summary>
+    /// Please see Card.cs for more information on
+    /// </summary>
+    /// <param name="playerHand">The player hand that is to be analyzed, and given a ranking.</param>
+    /// <returns>Returns a set of three integers [PokerHandRanking, HighCardRank, HighCardSuit]</returns>
+    public int[] HandRecognition(playerHand playerHand)
+    {
+        int PokerHandRanking, HighCardRank, HighCardSuit;
+
+        //PLACEHOLDER
+        int[] HandRecognitionReturn = new int[] {0,0,0};
+
+        return HandRecognitionReturn;
     }
 }

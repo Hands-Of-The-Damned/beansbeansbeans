@@ -10,8 +10,10 @@ public class Card
         ///This covers Minor and Major arcana
         ///</summary>
     public string CardName;
-    public bool isMinor;
-    public bool IsReverse;
+    public bool IsMinor;
+    public bool IsReverse = false;
+    public bool IsRankWild = false;
+    public bool IsSuitWild = false;
     public virtual void ReverseCard() { }
 }
 
@@ -25,7 +27,7 @@ public class MinorArcana : Card
     {
             CardRank = cardRank;
             CardSuit = cardSuit;
-            isMinor = true;
+            IsMinor = true;
 
             string CardNameP1;
             string CardNameP2;
@@ -99,7 +101,7 @@ public class MajorArcana : Card
     public MajorArcana(int cardNumber)
     {
         CardNumber = cardNumber;
-        isMinor = false;
+        IsMinor = false;
         IsReverse = false;
         //CardEffect Reference table will need to be added in the future, use placeholder for now
         CardEffect = "NULL";
