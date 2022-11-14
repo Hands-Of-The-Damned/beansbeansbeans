@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
@@ -53,13 +54,19 @@ public class handRecognition : MonoBehaviour
     /// </summary>
 
     public playerHand AnalyzedHand;
-
+    int HighCardRank, HighCardSuit;
     List<MinorArcana> PokerHand = new List<MinorArcana>();
     List<MajorArcana> EffectsHand = new List<MajorArcana>();
-    List<int> PokerHandSuits = new List<int>();
-    List<int> PokerHandRanks = new List<int>(); 
     int wildRankCount = 0;
     int wildSuitCount = 0;
+    int trueWildCount = 0;
+
+    handRecognition(playerHand analyzedHand)
+    {
+        AnalyzedHand = analyzedHand;
+        getHandInfo();
+    }
+
     void getHandInfo()
     {
         //Get info for major and minor arcana handtypes
@@ -67,18 +74,22 @@ public class handRecognition : MonoBehaviour
         EffectsHand.AddRange(AnalyzedHand.hand.OfType<MajorArcana>());
 
         //Sort PokerHand
-        PokerHand.Sort((x, y) => x.CardRank.CompareTo(y.CardRank));
+        //PokerHand.Sort((x, y) => x.CardRank.CompareTo(y.CardRank));
 
         //Get suits and ranks
-        for(int i = 0; i < PokerHand.Count; i++)
-        {
-            PokerHandSuits.Add(PokerHand[i].CardSuit);
-            PokerHandRanks.Add(PokerHand[i].CardRank);
-        }
+        //for(int i = 0; i < PokerHand.Count; i++)
+        //{
+        //    PokerHandSuits.Add(PokerHand[i].CardSuit);
+        //    PokerHandRanks.Add(PokerHand[i].CardRank);
+        //}
 
         //Get Wilds in hand 
         for(int i = 0; i < EffectsHand.Count; i++)
         {
+            if (EffectsHand[i].IsRankWild && EffectsHand[i].IsSuitWild)
+            {
+                trueWildCount++;
+            }
             if (EffectsHand[i].IsRankWild == true)
             {
                 wildRankCount++;
@@ -171,24 +182,26 @@ public class handRecognition : MonoBehaviour
     }
 
     //check for flush
-    bool FlushCheck(int[] suits)
+    bool FlushCheck(MinorArcana[] cards)
     {
         bool flag = false;
         int check = 0;
         int winCond = 5 - wildSuitCount;
 
-        for (int i = 0; i < flushLib.Length; i++)
+        for (int i = 1; i <= 4; i++)
         {
             check = 0;
-            for (int j = 0; j < flushLib[i].Length; j++)
+            for (int j = 0; j < cards.Length; j++)
             {
-                if (flushLib[i][j] == suits[j])
+                if (i == cards[j].CardSuit)
                 {
                     check++;
                 }
                 if (check >= winCond)
                 {
                     flag = true;
+                    HighCardRank = cards[j].CardRank;
+                    HighCardSuit = cards[j].CardSuit;
                 }
             }
         }
@@ -211,7 +224,7 @@ public class handRecognition : MonoBehaviour
     }
 
     //check for four of a kind
-    bool FourOfAKindCheck(int[] ranks)
+    bool FourOfAKindCheck(MinorArcana[] cards)
     {
         bool flag = false;
         int winCond = 4 - wildRankCount;
@@ -220,9 +233,9 @@ public class handRecognition : MonoBehaviour
         for(int i = 1; i <= 14; i++)
         {
             count = 0;
-            for(int j = 0; j < ranks.Length; j++)
+            for(int j = 0; j < cards.Length; j++)
             {
-                if (ranks[j] == i)
+                if (cards[j].CardRank == i)
                 {
                     count++;
                 }
@@ -230,6 +243,8 @@ public class handRecognition : MonoBehaviour
                 if (count >= winCond)
                 {
                     flag = true;
+                    HighCardRank = cards[j].CardRank;
+                    HighCardSuit = cards[j].CardSuit;
                 }
             }
         }
@@ -238,7 +253,7 @@ public class handRecognition : MonoBehaviour
     }
 
     //check for three of a kind
-    bool ThreeOfAKindCheck(int[] ranks)
+    bool ThreeOfAKindCheck(MinorArcana[] cards)
     {
         bool flag = false;
         int winCond = 3 - wildRankCount;
@@ -247,9 +262,9 @@ public class handRecognition : MonoBehaviour
         for (int i = 1; i <= 14; i++)
         {
             count = 0;
-            for (int j = 0; j < ranks.Length; j++)
+            for (int j = 0; j < cards.Length; j++)
             {
-                if (ranks[j] == i)
+                if (cards[j].CardRank == i)
                 {
                     count++;
                 }
@@ -257,6 +272,8 @@ public class handRecognition : MonoBehaviour
                 if (count >= winCond)
                 {
                     flag = true;
+                    HighCardRank = cards[j].CardRank;
+                    HighCardSuit = cards[j].CardSuit;
                 }
             }
         }
@@ -264,7 +281,7 @@ public class handRecognition : MonoBehaviour
         return flag;   
     }
 
-    bool PairCheck(int[] ranks)
+    bool PairCheck(MinorArcana[] cards)
     {
         bool flag = false;
         int winCond = 2 - wildRankCount;
@@ -272,9 +289,9 @@ public class handRecognition : MonoBehaviour
         for (int i = 1; i <= 14; i++)
         {
             count = 0;
-            for (int j = 0; j < ranks.Length; j++)
+            for (int j = 0; j < cards.Length; j++)
             {
-                if (ranks[j] == i)
+                if (cards[j].CardRank == i)
                 {
                     count++;
                 }
@@ -282,6 +299,8 @@ public class handRecognition : MonoBehaviour
                 if (count >= winCond)
                 {
                     flag = true;
+                    HighCardRank = cards[j].CardRank;
+                    HighCardSuit = cards[j].CardSuit;
                 }
             }
         }
@@ -290,20 +309,22 @@ public class handRecognition : MonoBehaviour
     }
 
     //take entire player hand, check for 2 pairs
-    bool TwoPairCheck(int[] ranks)
+    bool TwoPairCheck(MinorArcana[] cards)
     {
         bool flag1 = false;
         bool flag2 = false;
         int count = 0;
         int winCond = 2 - wildRankCount;
+        int highCardInd = -1;
         for(int i = 1; i <= 14; i++)
         {
             count = 0;
-            for (int j = 0; j < ranks.Length; j++)
+            for (int j = 0; j < cards.Length; j++)
             {
-                if (ranks[j] == i)
+                if (cards[j].CardRank == i)
                 {
                     count++;
+                    highCardInd = j;
                 }
             }
 
@@ -317,6 +338,8 @@ public class handRecognition : MonoBehaviour
             if ((count >= winCond) && flag1)
             {
                 flag2 = true;
+                HighCardRank = cards[highCardInd].CardRank;
+                HighCardSuit = cards[highCardInd].CardSuit;
             }
         }
 
@@ -324,12 +347,12 @@ public class handRecognition : MonoBehaviour
     }
 
     //take entire player hand, check for 1 pair, and 1 three of a kind
-    bool FullHouseCheck(int[] ranks)
+    bool FullHouseCheck(MinorArcana[] cards)
     {
         bool flag3P = false;
         bool flag2P = false;
         int count1 = 0;
-
+        int highCardInd = -1;
         //target winCond
         int winCond3P = 3 - wildRankCount;
         int winCond2P = 2 - wildRankCount;
@@ -338,12 +361,13 @@ public class handRecognition : MonoBehaviour
         for (int i = 1; i <= 14; i++)
         {
             count1 = 0;
-            for (int j = 0; j < ranks.Length; j++)
+            for (int j = 0; j < cards.Length; j++)
             {
                 //if there is a match, increment counter
-                if (ranks[j] == i)
+                if (cards[j].CardRank == i)
                 {
                     count1++;
+                    highCardInd = j;
                 }
             }
             //if winCond3P is detectd, flip relevant flags, and make winCond2P more difficult
@@ -364,11 +388,15 @@ public class handRecognition : MonoBehaviour
             if (flag2P && count1 >= winCond3P)
             {
                 flag3P = true;
+                HighCardRank = cards[highCardInd].CardRank;
+                HighCardSuit = cards[highCardInd].CardSuit;
             }
 
             else if (flag3P && count1 >= winCond2P)
             {
                 flag2P = true;
+                HighCardRank = cards[highCardInd].CardRank;
+                HighCardSuit = cards[highCardInd].CardSuit;
             }
         }
 
@@ -382,10 +410,48 @@ public class handRecognition : MonoBehaviour
     /// <returns>Returns a set of three integers [PokerHandRanking, HighCardRank, HighCardSuit]</returns>
     public int[] HandRecognition(playerHand playerHand)
     {
-        int PokerHandRanking, HighCardRank, HighCardSuit;
+        this.AnalyzedHand = playerHand;
+        getHandInfo();
 
-        //PLACEHOLDER
-        int[] HandRecognitionReturn = new int[] {0,0,0};
+        //default High Card
+        int PokerHandRanking = 1;
+        PokerHand.Sort((x, y) => x.CardRank.CompareTo(y.CardRank));
+        HighCardRank = PokerHand.First().CardRank;
+        HighCardSuit = PokerHand.First().CardSuit;
+
+        //Search for pair, three of a kind, four-of-a-kind, two pair, and full house, which each can take the full hand.
+        if (FourOfAKindCheck(PokerHand.ToArray()))
+        {
+            PokerHandRanking = 8;
+        }
+
+        else if (FullHouseCheck(PokerHand.ToArray()))
+        {
+            PokerHandRanking = 7;
+        }
+
+        else if (FlushCheck(PokerHand.ToArray()))
+        {
+            PokerHandRanking = 6;
+        }
+
+        else if (ThreeOfAKindCheck(PokerHand.ToArray()))
+        {
+            PokerHandRanking = 4;
+        }
+        
+        else if (TwoPairCheck(PokerHand.ToArray()))
+        {
+            PokerHandRanking = 3;
+        }
+
+        else if (TwoPairCheck(PokerHand.ToArray()))
+        {
+            PokerHandRanking = 2;
+        }
+
+        //manipulate array specifically to check it against straights
+        int[] HandRecognitionReturn = new int[] {PokerHandRanking, HighCardRank, HighCardSuit};
 
         return HandRecognitionReturn;
     }
