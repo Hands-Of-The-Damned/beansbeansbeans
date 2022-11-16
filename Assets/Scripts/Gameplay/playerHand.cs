@@ -25,7 +25,7 @@ public class playerHand : MonoBehaviour
     //can only use major arcana
     public void useCard(Card card)
     {
-        if (card.isMinor == false) 
+        if (card.IsMinor == false) 
         {
             //Do a thing
             discardCard(card);
@@ -46,7 +46,7 @@ public class playerHand : MonoBehaviour
         List<Card> minorArcana = new List<Card>();
         for (int i = 0; i < hand.Count; i++)
         {
-            if (hand[i].isMinor)
+            if (hand[i].IsMinor)
             {
                 minorArcana.Add(hand[i]);
             }
