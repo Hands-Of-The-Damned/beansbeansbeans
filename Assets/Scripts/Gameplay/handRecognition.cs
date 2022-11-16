@@ -105,7 +105,7 @@ public class handRecognition : MonoBehaviour
         bool checkFlag = false;
         bool winFlag = false;
         int check = 0;
-        int winCond = 5 - wildRankCount;
+        int winCond = 5 - trueWildCount;
         int highSuit = 0;
 
         //time complexity looks like n^3, its more like 20n, since arrays being compared are unchanging.
@@ -236,12 +236,12 @@ public class handRecognition : MonoBehaviour
     }
 
     //check for both flush and straight, will need to be refactored, most probably wrong (i.e. what if there's a flush and a straight but they're not the same cards? Check Royal Flush code
-    bool StraightFlush(MinorArcana[] cards)
+    bool StraightFlushCheck(MinorArcana[] cards)
     {
         bool checkFlag = false;
         bool winFlag = false;
         int check = 0;
-        int winCond = 5 - wildRankCount;
+        int winCond = 5 - trueWildCount;
         int highSuit = 0;
 
         //time complexity looks like n^4, its more like 280n, since arrays being compared are unchanging.
@@ -489,7 +489,17 @@ public class handRecognition : MonoBehaviour
         HighCardSuit = PokerHand.First().CardSuit;
 
         //Search for pair, three of a kind, four-of-a-kind, two pair, and full house, which each can take the full hand.
-        if (FourOfAKindCheck(PokerHand.ToArray()))
+        if (RoyalFlushCheck(PokerHand.ToArray()))
+        {
+            PokerHandRanking = 10;
+        }
+
+        else if (StraightFlushCheck(PokerHand.ToArray()))
+        {
+            PokerHandRanking = 9;
+        }
+        
+        else if (FourOfAKindCheck(PokerHand.ToArray()))
         {
             PokerHandRanking = 8;
         }
