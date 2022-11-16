@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+
+    enum states
+    {
+        Waiting,
+        PlayHand
+    }
+
     Player eventSystem;
     public playerHand hand;
     public int round;
@@ -14,9 +21,12 @@ public class Player : MonoBehaviour
     public bool playedArcanaThisRound;
     public bool raised;
     public bool folded;
+    public bool isAI;
+    states state; 
 
     private void Start()
     {
+        state = states.Waiting;
         round = 0;
         currentBetToMatch = 0;
         currentPot = 0;
@@ -28,10 +38,7 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            playHand();
-        }
+        checkState();
     }
 
     public void OnEnable()
@@ -57,6 +64,84 @@ public class Player : MonoBehaviour
 
 
     #region Functions
+
+    public void checkState()
+    {
+        switch (state)
+        {
+            case states.Waiting:
+                break;
+
+            case states.PlayHand:
+                playerTurn();
+                break;
+
+            default:
+                break;
+
+        }
+    }
+
+   /// <summary>
+   /// Call UI to enable buttons and let player conduct their turn
+   /// </summary>
+    public void playerTurn()
+    {
+        //send event to UI
+
+        state = states.Waiting;
+    }
+
+
+    #region Helperfunctions
+
+    /// <summary>
+    /// Set the AI bool using parameter
+    /// </summary>
+    /// <param name="x"></param>
+    public void setAI(bool x)
+    {
+        isAI = x;
+    }
+
+
+    /// <summary>
+    /// Set the folded bool with parameter
+    /// </summary>
+    /// <param name="x"></param>
+    public void setFold(bool x)
+    {
+        folded = x;
+    }
+
+    /// <summary>
+    /// Set the bet to an amount using parameter
+    /// </summary>
+    /// <param name="x"></param>
+    public void setBet(int x)
+    {
+        bet = x;
+    }
+
+    /// <summary>
+    /// Set the players currency amount using parameter
+    /// </summary>
+    /// <param name="x"></param>
+    public void setCurrency(int x)
+    {
+        currency = x;
+    }
+
+    /// <summary>
+    /// Set the raised bool using parameter
+    /// </summary>
+    /// <param name="x"></param>
+    public void setRaised(bool x)
+    {
+        raised = x;
+    }
+
+
     /// <summary>
     /// Check if the game and player are in the same round of game play
     /// if not, reset the played arcana bool, updates the round
@@ -64,7 +149,7 @@ public class Player : MonoBehaviour
     /// <param name="incomingRound"></param>
     public void checkCurrentRound(int incomingRound)
     {
-        if(incomingRound != round)
+        if (incomingRound != round)
         {
             playedArcanaThisRound = false;
         }
@@ -96,11 +181,13 @@ public class Player : MonoBehaviour
     /// <param name="blindAmt"></param>
     public void blindBet(int blindAmt)
     {
-        if(currency - blindAmt > 0)
+        if (currency - blindAmt > 0)
         {
             currency -= blindAmt;
         }
     }
+    #endregion
+
     #endregion
 
 
@@ -164,6 +251,12 @@ public class Player : MonoBehaviour
 
 
     /*________________Event Handles__________________*/
+
+    public void GameStats_PlayerStats()
+    {
+        //recive the players stats and set all relevent variables
+    }
+
     private void GameStates_Deal(object sender, GameStates.DealToPlayerEvent args)
     {
         if (args.player == this)
@@ -181,6 +274,7 @@ public class Player : MonoBehaviour
             currentBetToMatch = args.currentBet;
             currentPot = args.currentPot;
             checkCurrentRound(args.currentRound);
+            state = states.PlayHand;
         }
     }
 
@@ -205,6 +299,18 @@ public class Player : MonoBehaviour
     {
         this.hand.hand.Clear();
     }
+
+    public void UI_BetButton()
+    {
+        //set bet amount
+        //check if player raised
+    }
+
+    public void UI_FoldButton()
+    {
+        //set fold bool
+    }
+
 
     #endregion
 }

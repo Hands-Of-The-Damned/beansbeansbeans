@@ -704,5 +704,3 @@ public class GameStates : MonoBehaviour
 
     #endregion Events
 }
-
-
