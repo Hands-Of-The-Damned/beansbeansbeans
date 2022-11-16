@@ -1,12 +1,5 @@
-using JetBrains.Annotations;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Linq;
-using TMPro;
-using Unity.VisualScripting;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 public class handRecognition : MonoBehaviour
@@ -105,80 +98,113 @@ public class handRecognition : MonoBehaviour
     /// <summary>
     /// Only accepts a hand of 5. Preprocessing before a royal check must be done to ensure that the Cards passed are passed absolutely correctly, e.g. Will need check directly from player hand.
     /// </summary>
-    bool RoyalFlushCheck(int[] suits, int[] ranks)
+    bool RoyalFlushCheck(MinorArcana[] cards)
     {
-        int count = 0;
-        int AmtSuitToWin = 5;
-        int AmtRankToWin = 5;
-        int winCond = 5;
-        bool flag = false;
-
         //Lib for Royal Flush Ranks
         int[] royalFlushRanks = new int[] { 11, 12, 13, 14, 1 };
+        bool checkFlag = false;
+        bool winFlag = false;
+        int check = 0;
+        int winCond = 5 - wildRankCount;
+        int highSuit = 0;
 
-        //Wild handling
-        AmtRankToWin = AmtRankToWin - wildRankCount;
-        AmtSuitToWin = AmtSuitToWin - wildSuitCount;
-
-        //What if player rank wild and suit wild dont match up? Choose the higher number in royal flush case
-        if(AmtRankToWin > AmtSuitToWin)
+        //time complexity looks like n^3, its more like 20n, since arrays being compared are unchanging.
+        //Start with each possible entry in flush
+        for (int h = 1; h <= 4; h++)
         {
-            winCond = AmtRankToWin;
-            winCond = AmtRankToWin;
-        }
-        if(AmtRankToWin < AmtSuitToWin)
-        {
-            winCond = AmtSuitToWin;
-        }
-
-        //Check flush lib first. It's bigger.
-        for (int i = 0;  i < flushLib.Length; i++)
-        {
-            //reset count to 0
-            count = 0;
-            for(int j = 0; j < flushLib[i].Length; j++)
+            for (int i = 0; i < royalFlushRanks.Length; i++)
             {
-                //Compare flushlib against suits and ranks against RoyalFlush
-                if((flushLib[i][j] == suits[j]) && (royalFlushRanks[j] == ranks[j]))
+                check = 0;
+                //Iterate through each item in each straight.
+                for (int k = 0; k < cards.Length; k++)
                 {
-                    count++;
+                    if (royalFlushRanks[i] == cards[k].CardRank && cards[k].CardSuit == h)
+                    {
+                        checkFlag = true;
+                        highSuit = cards[k].CardSuit;
+                    }
                 }
 
-                if(count >= winCond)
+                if (checkFlag)
                 {
-                    flag = true;
+
+                    check++;
                 }
+
+                if (check >= winCond)
+                {
+                    winFlag = true;
+                    HighCardRank = straightLib[i][4];
+                    //what if the last card is a wild? player wins, make the suit the highest suit. (5)
+                    if (checkFlag == false)
+                    {
+                        HighCardSuit = 5;
+                    }
+                    else
+                    {
+                        HighCardSuit = highSuit;
+                    }
+                }
+                checkFlag = false;
 
             }
         }
-
-        return flag;
+        return winFlag;
     }
 
     //check for straights
-    bool StraightCheck(int[] ranks)
+    bool StraightCheck(MinorArcana[] cards)
     {
-        bool flag = false;
+        bool checkFlag = false;
+        bool winFlag = false;
         int check = 0;
         int winCond = 5 - wildRankCount;
+        int highSuit = 0;
 
+        //time complexity looks like n^3, its more like 70n, since arrays being compared are unchanging.
+        //Start with each possible entry
         for(int i = 0; i < straightLib.Length; i++)
         {
             check = 0;
-            for(int j = 0; j < straightLib[i].Length; j++)
+            //Iterate through each item in each straight.
+            for (int j = 0; j < straightLib[i].Length; j++)
             {
-                if(straightLib[i][j] == ranks[j])
+                
+                //Iterate through each item in card array.
+                for (int k = 0; k < cards.Length; k++)
                 {
+                    if(straightLib[i][j] == cards[k].CardRank)
+                    {
+                        checkFlag = true;
+                        highSuit = cards[k].CardSuit;
+                    }
+                }
+
+                if (checkFlag)
+                {
+                    
                     check++;
                 }
+
                 if(check >= winCond)
                 {
-                    flag = true;
+                    winFlag = true;
+                    HighCardRank = straightLib[i][4];
+                    //what if the last card is a wild? player wins, make the suit the highest suit. (5)
+                    if (checkFlag == false)
+                    {
+                        HighCardSuit = 5;
+                    }
+                    else
+                    {
+                        HighCardSuit = highSuit;
+                    }
                 }
+                checkFlag = false;
             }
             
         }
-        return flag;
+        return winFlag;
     }
 
     //check for flush
@@ -210,17 +236,60 @@ public class handRecognition : MonoBehaviour
     }
 
     //check for both flush and straight, will need to be refactored, most probably wrong (i.e. what if there's a flush and a straight but they're not the same cards? Check Royal Flush code
-    bool StraightFlush(int[] suits, int[] ranks)
+    bool StraightFlush(MinorArcana[] cards)
     {
-        if (StraightCheck(suits) && FlushCheck(ranks))
-        {
-            return true;
-        }
+        bool checkFlag = false;
+        bool winFlag = false;
+        int check = 0;
+        int winCond = 5 - wildRankCount;
+        int highSuit = 0;
 
-        else
+        //time complexity looks like n^4, its more like 280n, since arrays being compared are unchanging.
+        //Start with each possible entry in flush
+        for (int h = 1; h <= 4; h++)
         {
-            return false;
+            for (int i = 0; i < straightLib.Length; i++)
+            {
+                check = 0;
+                //Iterate through each item in each straight.
+                for (int j = 0; j < straightLib[i].Length; j++)
+                {
+                    //Iterate through each item in card array.
+                    for (int k = 0; k < cards.Length; k++)
+                    {
+                        if (straightLib[i][j] == cards[k].CardRank && cards[k].CardSuit == h)
+                        {
+                            checkFlag = true;
+                            highSuit = cards[k].CardSuit;
+                        }
+                    }
+
+                    if (checkFlag)
+                    {
+
+                        check++;
+                    }
+
+                    if (check >= winCond)
+                    {
+                        winFlag = true;
+                        HighCardRank = straightLib[i][4];
+                        //what if the last card is a wild? player wins, make the suit the highest suit. (5)
+                        if (checkFlag == false)
+                        {
+                            HighCardSuit = 5;
+                        }
+                        else
+                        {
+                            HighCardSuit = highSuit;
+                        }
+                    }
+                    checkFlag = false;
+                }
+
+            }
         }
+        return winFlag;
     }
 
     //check for four of a kind
@@ -433,6 +502,11 @@ public class handRecognition : MonoBehaviour
         else if (FlushCheck(PokerHand.ToArray()))
         {
             PokerHandRanking = 6;
+        }
+
+        else if (StraightCheck(PokerHand.ToArray()))
+        {
+            PokerHandRanking = 5;
         }
 
         else if (ThreeOfAKindCheck(PokerHand.ToArray()))
