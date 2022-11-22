@@ -24,6 +24,7 @@ public class dealerController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             zoomActive = "y";
+            Debug.Log("y");
         }
         if (Input.GetMouseButtonDown(1))
         {

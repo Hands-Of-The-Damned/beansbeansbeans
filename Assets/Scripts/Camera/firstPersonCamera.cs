@@ -1,3 +1,4 @@
+/*
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,7 +34,7 @@ public class firstPersonCamera : MonoBehaviour
 
         player.Rotate(Vector3.up * inputX);
 
-        if (NpcController.zoomActive == "y")
+        if (NpcController.npcZoom == "y")
         {
             isZoomed = !isZoomed;
         }
@@ -48,3 +49,4 @@ public class firstPersonCamera : MonoBehaviour
 
     }
 }
+*/
