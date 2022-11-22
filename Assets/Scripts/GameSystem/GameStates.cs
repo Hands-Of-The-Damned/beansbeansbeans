@@ -26,6 +26,7 @@ public class GameStates : MonoBehaviour
     List<int> playerOrder;
 
     public Deck deck;
+    public handRecognition handReco;
     bool allPlayersBigBlind = false;
     int round;
     public int pot;
@@ -45,7 +46,7 @@ public class GameStates : MonoBehaviour
         public bool isBigBlind;
         public bool isSmallBlind;
         public int currency;
-
+        public int[] handRank;
     }
 
     void Start()
@@ -152,6 +153,7 @@ public class GameStates : MonoBehaviour
             player.isBigBlind = false;
             player.isSmallBlind = false;
             player.currency = x.currency;
+            player.handRank = new int[]{0,0,0};
             players.Add(player);
             Debug.Log("player added: " + x);
         }
@@ -227,6 +229,8 @@ public class GameStates : MonoBehaviour
     public void showDown()
     {
         //evaluate hands and declare a winner for the round, maybe use an event for this
+        Player winner = compareHands();
+        Debug.Log(winner.playerName);
         resetPlayersInRound();
         resetPlayedCurrentRound();
         round = 1;
@@ -249,6 +253,111 @@ public class GameStates : MonoBehaviour
     #endregion
 
     #region HelperFunctions
+
+    /// <summary>
+    /// This compares all players hands and returns the winner
+    /// </summary>
+    /// <returns></returns>
+    public Player compareHands()
+    {
+        List<Player> pokerHandHigh = new List<Player>() ;
+        List<Player> highCard = new List<Player>();
+        List<Player> suitHigh = new List<Player>();
+        int pokerHand = 0;
+        int high = 0;
+        int suit = 0;
+
+        //Process hands
+        foreach (PlayerContainer x in players)
+        {
+            if (x.inRound)
+            {
+                x.handRank.Equals(handReco.HandRecognition(x.player.hand));
+                if (x.handRank[0] > pokerHand)
+                {
+                    pokerHand = x.handRank[0];
+                }
+            }
+        }
+
+        //find player(s) with the best poker hand
+        foreach (PlayerContainer x in players)
+        {
+            if (x.inRound)
+            {
+                if(x.handRank[0] == pokerHand)
+                {
+                    pokerHandHigh.Add(x.player);
+                }
+            }
+        }
+
+        //check if there is one player with the best hand
+        //if not find the players with the best high card
+        if (pokerHandHigh.Count != 1)
+        {
+            foreach (PlayerContainer x in players)
+            {
+                if (x.inRound && x.handRank[0] == pokerHand)
+                {
+                    if (x.handRank[1] > high)
+                    {
+                        high = x.handRank[1];
+                    }
+                }
+            }
+            foreach (PlayerContainer x in players)
+            {
+                if (x.inRound && x.handRank[0]==pokerHand)
+                {
+                    if (x.handRank[1] == high)
+                    {
+                        highCard.Add(x.player);
+                    }
+                }
+            }
+        }
+        else
+        {
+            // return the player with the best poker hand
+            return pokerHandHigh[0];
+        }
+
+        //check if there is one player with the best high card
+        //if not find the player with the highest suit
+        if (highCard.Count != 1)
+        {
+            foreach (PlayerContainer x in players)
+            {
+                if (x.inRound && x.handRank[0] == pokerHand && x.handRank[1] == high)
+                {
+                    if (x.handRank[2] > suit)
+                    {
+                        suit = x.handRank[2];
+                    }
+                }
+            }
+            foreach (PlayerContainer x in players)
+            {
+                if (x.inRound && x.handRank[0] == pokerHand && x.handRank[1] == high)
+                {
+                    if (x.handRank[2] == suit)
+                    {
+                        suitHigh.Add(x.player);
+                    }
+                }
+            }
+        }
+        else
+        {
+            //return player with best high card
+            return highCard[0];
+        }
+        //return player with best suit
+        return suitHigh[0];
+
+    }
+
     /// <summary>
     /// Deal @param numCards cards to @param player
     /// </summary>
