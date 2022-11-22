@@ -64,7 +64,7 @@ public class GameStates : MonoBehaviour
     //Subscribe to events
         Player.RoundInfo += Player_RoundInfo;
         Player.ShowDown += Player_ShowDownResponse;
-        //TempGameStart.StartGame += TempGameStart_StartGame;
+        PlayerInfo.StartGame += TempGameStart_StartGame;
 
     }
 
@@ -73,7 +73,7 @@ public class GameStates : MonoBehaviour
         //Unsubscribe to events
         Player.RoundInfo -= Player_RoundInfo;
         Player.ShowDown -= Player_ShowDownResponse;
-        //TempGameStart.StartGame -= TempGameStart_StartGame;
+        PlayerInfo.StartGame -= TempGameStart_StartGame;
     }
 
     void Update()
@@ -95,25 +95,35 @@ public class GameStates : MonoBehaviour
                 break;
 
             case states.Deal:
+                Debug.Log("Gamestate: deal");
+                if (allPlayersBigBlind)
+                {
+                    state = states.EndGame;
+                }
                 initialDeal();
                 break;
 
             case states.DealNextCard:
+                Debug.Log("Gamestate: dealnextcard");
                 dealNextCard();
                 break;
 
             case states.PromptPlayer:
+                Debug.Log("Gamestate: prompt player");
                 promptPlayer();
                 break;
 
             case states.WaitForPlayer:
+                Debug.Log("Gamestate: wait");
                 break;
 
             case states.Showdown:
+                Debug.Log("Gamestate: showdown");
                 showDown();
                 break;
 
             case states.EndGame:
+                Debug.Log("Gamestate: endgame");
                 endGame();
                 break;
 
@@ -142,6 +152,8 @@ public class GameStates : MonoBehaviour
             player.isBigBlind = false;
             player.isSmallBlind = false;
             player.currency = x.currency;
+            players.Add(player);
+            Debug.Log("player added: " + x);
         }
         setSmallBlind();
         state = states.Deal;
@@ -160,9 +172,11 @@ public class GameStates : MonoBehaviour
                 if (x.inRound)
                 {
                     DealToPlayer(x.player, dealToPlayer(1));
+                    Debug.Log("dealt card to: " + x);
                 }
             }
         }
+        allPlayersBigBlind = checkAllPlayersBigBlind();
         updateBigBlind();
         takeInitalBets();
         state = states.PromptPlayer;
@@ -649,7 +663,7 @@ public class GameStates : MonoBehaviour
     * receive list of the players in the game to initialize the game
     */
 
-    private void TempGameStart_StartGame(object sender, TempGameStart.StartGameEvent args)
+    private void TempGameStart_StartGame(object sender, PlayerInfo.StartGameEvent args)
     {
         gameInitialize(args.players);
     }

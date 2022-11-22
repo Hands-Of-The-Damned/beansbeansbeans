@@ -11,8 +11,9 @@ public class Player : MonoBehaviour
         PlayHand
     }
 
-    Player eventSystem;
+    GameObject PlayerPreFab;
     public playerHand hand;
+    public string playerName;
     public int round;
     public int currentBetToMatch;
     public int currentPot;
@@ -33,12 +34,38 @@ public class Player : MonoBehaviour
         playedArcanaThisRound = false;
         raised = false;
         folded = false;
-        currency = 0;
+        currency = 100;
+        playerName = "Brongus";
     }
 
     private void Update()
     {
         checkState();
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            setFold(!folded);
+            Debug.Log(playerName + " fold " + folded);
+        }
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            setBet(bet += 1);
+            Debug.Log(playerName + " bet " + bet);
+        }
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            setBet(bet -= 1);
+            Debug.Log(playerName + " bet " + bet);
+        }
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            setBet(currentBetToMatch);
+            Debug.Log(playerName + " bet "+bet);
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            playHand();
+            Debug.Log(playerName + " ended turn");
+        }
     }
 
     public void OnEnable()
@@ -48,6 +75,7 @@ public class Player : MonoBehaviour
         GameStates.BigBlind += GameStates_BigBlindBetEvent;
         GameStates.SmallBlind += GameStates_SmallBlindBetEvent;
         GameStates.NewHand += GameStates_NewHand;
+        PlayerInfo.SendPlayer += PlayerInfo_PlayerInfo;
     }
 
     public void OnDisable()
@@ -57,13 +85,19 @@ public class Player : MonoBehaviour
         GameStates.BigBlind -= GameStates_BigBlindBetEvent;
         GameStates.SmallBlind -= GameStates_SmallBlindBetEvent;
         GameStates.NewHand -= GameStates_NewHand;
-
+        PlayerInfo.SendPlayer -= PlayerInfo_PlayerInfo;
     }
 
 
 
 
     #region Functions
+
+    public Player()
+    {
+        this.Ask();
+    }
+
 
     public void checkState()
     {
@@ -88,12 +122,18 @@ public class Player : MonoBehaviour
     public void playerTurn()
     {
         //send event to UI
-
+        Debug.Log(playerName + " turn");
+        Debug.Log(hand.hand.ToString());
         state = states.Waiting;
     }
 
 
     #region Helperfunctions
+
+    public void setName(string name)
+    {
+        playerName = name;
+    }
 
     /// <summary>
     /// Set the AI bool using parameter
@@ -121,6 +161,14 @@ public class Player : MonoBehaviour
     public void setBet(int x)
     {
         bet = x;
+        if(bet > currentBetToMatch)
+        {
+            raised = true;
+        }
+        else
+        {
+            raised = false;
+        }
     }
 
     /// <summary>
@@ -163,15 +211,15 @@ public class Player : MonoBehaviour
     {
         if (folded)
         {
-            eventSystem.SendRoundInfo(this, folded, raised, bet);
+            this.SendRoundInfo(this, folded, raised, bet);
         }
         else if (raised)
         {
-            eventSystem.SendRoundInfo(this, folded, raised, bet);
+            this.SendRoundInfo(this, folded, raised, bet);
         }
         else
         {
-            eventSystem.SendRoundInfo(this, folded, raised, bet);
+            this.SendRoundInfo(this, folded, raised, bet);
         }
     }
 
@@ -204,7 +252,6 @@ public class Player : MonoBehaviour
 
     public class SendRoundDecision
     {
-        public Player eventSystem;
         public bool fold;
         public bool raise;
         public int bet;
@@ -216,6 +263,11 @@ public class Player : MonoBehaviour
             fold = didFold;
             raise = willRaise;
             bet = betAmt;
+
+            player.setFold(false);
+            player.setBet(0);
+            player.setRaised(false);
+
         }
     }
 
@@ -227,9 +279,13 @@ public class Player : MonoBehaviour
     }
 
 
+     /* EVENT 2
+     * Showdown Response
+     * Respond to showdown
+     */
+
     public class ShowDownResponse
     {
-        public Player eventSystem;
         public ShowDownResponse()
         {
 
@@ -242,6 +298,28 @@ public class Player : MonoBehaviour
     {
         ShowDown?.Invoke(this, new ShowDownResponse());
     }
+
+
+    /* EVENT 3
+     * Ask for Player Info
+     * Ask the data base for this players info
+     */
+
+    public class AskForInfo
+    {
+        public AskForInfo()
+        {
+
+        }
+    }
+
+    public static event System.EventHandler<AskForInfo> AskInfo;
+
+    public void Ask()
+    {
+        AskInfo?.Invoke(this, new AskForInfo());
+    }
+
 
     /* EVENT 2
      * Play major arcana
@@ -309,6 +387,16 @@ public class Player : MonoBehaviour
     public void UI_FoldButton()
     {
         //set fold bool
+    }
+
+    public void PlayerInfo_PlayerInfo(object sender, PlayerInfo.SendPlayerInfoEvent args)
+    {
+        if(args.player == this)
+        {
+            setName(args.playerName);
+            setAI(args.playerIsAI);
+            setCurrency(args.playerCurrency);
+        }
     }
 
 
