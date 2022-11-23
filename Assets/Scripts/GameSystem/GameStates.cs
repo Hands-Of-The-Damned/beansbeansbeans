@@ -29,12 +29,12 @@ public class GameStates : MonoBehaviour
     public handRecognition handReco;
     public PlayerInfo info;
 //test data
-    List<Player> newPlayers;
-    public Player player;
-    public Player npc1;
-    public Player npc2;
-    public Player npc3;
-    public Player npc4;
+    List<GameObject> newPlayers;
+    public GameObject player;
+    public GameObject npc1;
+    public GameObject npc2;
+    public GameObject npc3;
+    public GameObject npc4;
 
     bool allPlayersBigBlind = false;
     int round;
@@ -46,7 +46,7 @@ public class GameStates : MonoBehaviour
 
 
     public struct PlayerContainer{
-        public Player player;
+        public GameObject player;
         public bool inRound;
         public bool inGame;
         public bool playedCurrentRound;
@@ -61,6 +61,13 @@ public class GameStates : MonoBehaviour
     void Start()
     {
         //test data
+
+        //player = GetComponent<GameObject>();
+        //npc1 = GetComponent<GameObject>();
+        //npc2 = GetComponent<GameObject>();
+        //npc3 = GetComponent<GameObject>();
+        //npc4 = GetComponent<GameObject>();
+
         newPlayers.Add(player);
         newPlayers.Add(npc1);
         newPlayers.Add(npc2);
@@ -82,7 +89,7 @@ public class GameStates : MonoBehaviour
     //Subscribe to events
         Player.RoundInfo += Player_RoundInfo;
         Player.ShowDown += Player_ShowDownResponse;
-        PlayerInfo.StartGame += TempGameStart_StartGame;
+        //PlayerInfo.StartGame += TempGameStart_StartGame;
 
     }
 
@@ -91,7 +98,7 @@ public class GameStates : MonoBehaviour
         //Unsubscribe to events
         Player.RoundInfo -= Player_RoundInfo;
         Player.ShowDown -= Player_ShowDownResponse;
-        PlayerInfo.StartGame -= TempGameStart_StartGame;
+        //PlayerInfo.StartGame -= TempGameStart_StartGame;
     }
 
     void Update()
@@ -157,9 +164,9 @@ public class GameStates : MonoBehaviour
     /// </summary>
     /// <param name="newPlayers"></param>
     //might need to change return type
-    public void gameInitialize(List<Player> newPlayers)
+    public void gameInitialize(List<GameObject> newPlayers)
     {
-        foreach(Player x in newPlayers)
+        foreach(GameObject x in newPlayers)
         {
             PlayerContainer player;
             player.player = x;
@@ -170,7 +177,7 @@ public class GameStates : MonoBehaviour
             player.hasBeenSmallBlind = false;
             player.isBigBlind = false;
             player.isSmallBlind = false;
-            player.currency = x.currency;
+            player.currency = x.GetComponent<Player>().currency;
             player.handRank = new int[]{0,0,0};
             players.Add(player);
             Debug.Log("player added: " + x);
@@ -247,8 +254,8 @@ public class GameStates : MonoBehaviour
     public void showDown()
     {
         //evaluate hands and declare a winner for the round, maybe use an event for this
-        Player winner = compareHands();
-        Debug.Log(winner.playerName);
+        GameObject winner = compareHands();
+        Debug.Log(winner.GetComponent<Player>().playerName);
         resetPlayersInRound();
         resetPlayedCurrentRound();
         round = 1;
@@ -276,11 +283,11 @@ public class GameStates : MonoBehaviour
     /// This compares all players hands and returns the winner
     /// </summary>
     /// <returns></returns>
-    public Player compareHands()
+    public GameObject compareHands()
     {
-        List<Player> pokerHandHigh = new List<Player>() ;
-        List<Player> highCard = new List<Player>();
-        List<Player> suitHigh = new List<Player>();
+        List<GameObject> pokerHandHigh = new List<GameObject>() ;
+        List<GameObject> highCard = new List<GameObject>();
+        List<GameObject> suitHigh = new List<GameObject>();
         int pokerHand = 0;
         int high = 0;
         int suit = 0;
@@ -290,7 +297,7 @@ public class GameStates : MonoBehaviour
         {
             if (x.inRound)
             {
-                x.handRank.Equals(handReco.HandRecognition(x.player.hand));
+                x.handRank.Equals(handReco.HandRecognition(x.player.GetComponent<Player>().hand));
                 if (x.handRank[0] > pokerHand)
                 {
                     pokerHand = x.handRank[0];
@@ -406,7 +413,7 @@ public class GameStates : MonoBehaviour
     /// Remove @param player form the current round
     /// </summary>
     /// <param name="player"></param>
-    public void removePlayerFormRound(Player player)
+    public void removePlayerFormRound(GameObject player)
     {
         for(int i = 0; i < players.Count; i++)
         {
@@ -421,7 +428,7 @@ public class GameStates : MonoBehaviour
     /// Removes the player from the game
     /// </summary>
     /// <param name="player"></param>
-    public void removePlayerFromGame(Player player)
+    public void removePlayerFromGame(GameObject player)
     {
         for (int i = 0; i < players.Count; i++)
         {
@@ -628,13 +635,12 @@ public class GameStates : MonoBehaviour
 
     public class SendBettingRoundInfoEvent
     {
-        GameStates eventSystem;
-        public Player player;
+        public GameObject player;
         public int currentBet;
         public int currentPot;
         public int currentRound;
 
-        public SendBettingRoundInfoEvent(Player playersTurn, int bet, int pot, int round)
+        public SendBettingRoundInfoEvent(GameObject playersTurn, int bet, int pot, int round)
         {
             player = playersTurn;
             currentBet = bet;
@@ -645,7 +651,7 @@ public class GameStates : MonoBehaviour
 
     public static event System.EventHandler<SendBettingRoundInfoEvent> BettingRoundInfo;
 
-    public void SendRoundInfo(Player player, int bet, int pot, int round)
+    public void SendRoundInfo(GameObject player, int bet, int pot, int round)
     {
         BettingRoundInfo?.Invoke(this, new SendBettingRoundInfoEvent(player, bet, pot, round));
     }
@@ -658,11 +664,10 @@ public class GameStates : MonoBehaviour
 
     public class DealToPlayerEvent
     {
-        public GameStates eventSystem;
-        public Player player;
+        public GameObject player;
         public Card card;
 
-        public DealToPlayerEvent(Player playerDeltTo, Card newCard)
+        public DealToPlayerEvent(GameObject playerDeltTo, Card newCard)
         {
             player = playerDeltTo;
             card = newCard;
@@ -672,7 +677,7 @@ public class GameStates : MonoBehaviour
 
     public static event System.EventHandler<DealToPlayerEvent> Deal;
 
-    public void DealToPlayer(Player player, Card newCard)
+    public void DealToPlayer(GameObject player, Card newCard)
     {
         Deal?.Invoke(this, new DealToPlayerEvent(player, newCard));
     }
@@ -686,11 +691,10 @@ public class GameStates : MonoBehaviour
 
     public class BigBlindBetEvent
     {
-        public GameStates eventSystem;
         public int bet;
-        public Player player;
+        public GameObject player;
 
-        public BigBlindBetEvent(Player bigBlind, int betAmount)
+        public BigBlindBetEvent(GameObject bigBlind, int betAmount)
         {
             player = bigBlind;
             bet = betAmount;
@@ -699,7 +703,7 @@ public class GameStates : MonoBehaviour
 
     public static event System.EventHandler<BigBlindBetEvent> BigBlind;
 
-    public void TakeBigBet(Player player, int bet)
+    public void TakeBigBet(GameObject player, int bet)
     {
         BigBlind?.Invoke(this, new BigBlindBetEvent(player, bet));
     }
@@ -713,11 +717,10 @@ public class GameStates : MonoBehaviour
 
     public class SmallBlindBetEvent
     {
-        public GameStates eventSystem;
         public int bet;
-        public Player player;
+        public GameObject player;
 
-        public SmallBlindBetEvent(Player smallBlind, int betAmount)
+        public SmallBlindBetEvent(GameObject smallBlind, int betAmount)
         {
             player = smallBlind;
             bet = betAmount;
@@ -726,7 +729,7 @@ public class GameStates : MonoBehaviour
 
     public static event System.EventHandler<SmallBlindBetEvent> SmallBlind;
 
-    public void TakeSmallBet(Player player, int bet)
+    public void TakeSmallBet(GameObject player, int bet)
     {
         SmallBlind?.Invoke(this, new SmallBlindBetEvent(player, bet));
     }
@@ -737,7 +740,6 @@ public class GameStates : MonoBehaviour
 
     public class NewHandEvent
     {
-        public GameStates eventSystem;
 
 
         public NewHandEvent()
@@ -758,7 +760,6 @@ public class GameStates : MonoBehaviour
 
     public class ShowDownEvent
     {
-        public GameStates eventSystem;
 
         public ShowDownEvent()
         {
@@ -790,10 +791,10 @@ public class GameStates : MonoBehaviour
     * receive list of the players in the game to initialize the game
     */
 
-    private void TempGameStart_StartGame(object sender, PlayerInfo.StartGameEvent args)
-    {
-        gameInitialize(args.players);
-    }
+    //private void TempGameStart_StartGame(object sender, PlayerInfo.StartGameEvent args)
+    //{
+    //    gameInitialize(args.players);
+    //}
 
     /* EVENT HANDLE    
    * Player Betting Round Event

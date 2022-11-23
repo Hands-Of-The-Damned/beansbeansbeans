@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     }
 
     public string file;
-    public Player thisPlayer;
+    GameObject thisPlayer;
     public playerHand hand;
     public string playerName;
     public int round;
@@ -30,7 +30,8 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        this.Ask(file);
+        thisPlayer = GetComponent<GameObject>();
+        this.Ask(thisPlayer, file);
     }
     private void Start()
     {
@@ -102,7 +103,7 @@ public class Player : MonoBehaviour
 
     public Player()
     {
-        this.Ask(file);
+        this.Ask(thisPlayer, file);
     }
 
 
@@ -218,15 +219,15 @@ public class Player : MonoBehaviour
     {
         if (folded)
         {
-            this.SendRoundInfo(this, folded, raised, bet);
+            SendRoundInfo(thisPlayer, folded, raised, bet);
         }
         else if (raised)
         {
-            this.SendRoundInfo(this, folded, raised, bet);
+            SendRoundInfo(thisPlayer, folded, raised, bet);
         }
         else
         {
-            this.SendRoundInfo(this, folded, raised, bet);
+            SendRoundInfo(thisPlayer, folded, raised, bet);
         }
     }
 
@@ -262,26 +263,26 @@ public class Player : MonoBehaviour
         public bool fold;
         public bool raise;
         public int bet;
-        public Player thisPlayer;
+        public GameObject thisPlayer;
 
-        public SendRoundDecision(Player player, bool didFold, bool willRaise, int betAmt)
+        public SendRoundDecision(GameObject player, bool didFold, bool willRaise, int betAmt)
         {
             thisPlayer = player;
             fold = didFold;
             raise = willRaise;
             bet = betAmt;
 
-            player.setFold(false);
-            player.setBet(0);
-            player.setRaised(false);
-            player.isTurn = false;
+            player.GetComponent<Player>().setFold(false);
+            player.GetComponent<Player>().setBet(0);
+            player.GetComponent<Player>().setRaised(false);
+            player.GetComponent<Player>().isTurn = false;
 
         }
     }
 
     public static event System.EventHandler<SendRoundDecision> RoundInfo;
 
-    public void SendRoundInfo(Player player, bool didFold, bool isRaise, int betAmt)
+    public void SendRoundInfo(GameObject player, bool didFold, bool isRaise, int betAmt)
     {
         RoundInfo?.Invoke(this, new SendRoundDecision(player, didFold, isRaise, betAmt));
     }
@@ -316,17 +317,19 @@ public class Player : MonoBehaviour
     public class AskForInfo
     {
         public string file;
-        public AskForInfo(string playerFile)
+        public GameObject player;
+        public AskForInfo(GameObject thisPlayer, string playerFile)
         {
             file = playerFile;
+            player = thisPlayer;
         }
     }
 
     public static event System.EventHandler<AskForInfo> AskInfo;
 
-    public void Ask(string playerFile)
+    public void Ask(GameObject player, string playerFile)
     {
-        AskInfo?.Invoke(this, new AskForInfo(playerFile));
+        AskInfo?.Invoke(this, new AskForInfo(player, playerFile));
     }
 
 

@@ -77,9 +77,9 @@ public class PlayerInfo : MonoBehaviour
     public class StartGameEvent
     {
         public PlayerInfo eventSystem;
-        public List<Player> players;
+        public List<GameObject> players;
 
-        public StartGameEvent(List<Player> newPlayers)
+        public StartGameEvent(List<GameObject> newPlayers)
         {
             players = newPlayers;
         }
@@ -87,7 +87,7 @@ public class PlayerInfo : MonoBehaviour
 
     public static event System.EventHandler<StartGameEvent> StartGame;
 
-    public void SendStartGame(List<Player> players)
+    public void SendStartGame(List<GameObject> players)
     {
             StartGame?.Invoke(this, new StartGameEvent(players));
     }
@@ -96,12 +96,12 @@ public class PlayerInfo : MonoBehaviour
 
     public class SendPlayerInfoEvent
     {
-        public Player player;
+        public GameObject player;
         public string playerName;
         public int playerCurrency;
         public bool playerIsAI;
 
-        public SendPlayerInfoEvent(Player newPlayer, string newName, int newCurrency, bool isAI)
+        public SendPlayerInfoEvent(GameObject newPlayer, string newName, int newCurrency, bool isAI)
         {
             player = newPlayer;
             playerName = newName;
@@ -112,7 +112,7 @@ public class PlayerInfo : MonoBehaviour
 
     public static event System.EventHandler<SendPlayerInfoEvent> SendPlayer;
 
-    public void SendPlayerInfo(Player player, string name, int currency, bool isAI)
+    public void SendPlayerInfo(GameObject player, string name, int currency, bool isAI)
     {
         SendPlayer?.Invoke(this, new SendPlayerInfoEvent(player, name, currency, isAI));
     }
@@ -125,7 +125,7 @@ public class PlayerInfo : MonoBehaviour
         string saveString = File.ReadAllText(file);
         playerData newPlayer;
         newPlayer = JsonUtility.FromJson<playerData>(saveString);
-        SendPlayerInfo((Player)sender, newPlayer.playerName, newPlayer.currency, newPlayer.ai);
+        SendPlayerInfo(args.player, newPlayer.playerName, newPlayer.currency, newPlayer.ai);
     }
 
     
