@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     }
 
     public string file;
-    GameObject PlayerPreFab;
+    public Player thisPlayer;
     public playerHand hand;
     public string playerName;
     public int round;
