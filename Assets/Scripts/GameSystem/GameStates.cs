@@ -20,16 +20,16 @@ public class GameStates : MonoBehaviour
     }
 
     states state = states.Initial;
-    List<PlayerContainer> players;
+    List<PlayerContainer> players = new List<PlayerContainer>();
 
     int playerOrderIndex;
-    List<int> playerOrder;
+    List<int> playerOrder = new List<int>();
 
     public Deck deck;
     public handRecognition handReco;
     public PlayerInfo info;
 //test data
-    List<GameObject> newPlayers;
+    List<GameObject> newPlayers = new List<GameObject>();
     public GameObject player;
     public GameObject npc1;
     public GameObject npc2;
@@ -458,7 +458,7 @@ public class GameStates : MonoBehaviour
     /// </summary>
     /// <param name="player"></param>
     public void resetPlayOrder()
-    {
+    { 
         int j = playerOrder[playerOrderIndex];
         playerOrder.Clear();
         for(int i = j+1; i < players.Count; i++)
