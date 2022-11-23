@@ -1,35 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public class PlayerInfo : MonoBehaviour
 {
+    string playerFile;
+    string npc1File;
+    string npc2File;
+    string npc3File;
+    string npc4File;
 
-    List<Players> players;
-    List<Player> playersInGame;
-
-    public GameObject playerPrefab;
-    public GameObject npcPrefab;
-
-
-    struct Players
-{
-        public GameObject Player;
-        public string name;
-        public int currency;
-        public bool isAI;
-};
-
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        createPlayers();
+        playerFile = Application.dataPath + "/Scripts/Player Data/Player.txt";
+        npc1File = Application.dataPath + "/Scripts/Player Data/NPC1.txt";
+        npc2File = Application.dataPath + "/Scripts/Player Data/NPC2.txt";
+        npc3File = Application.dataPath + "/Scripts/Player Data/NPC3.txt";
+        npc4File = Application.dataPath + "/Scripts/Player Data/NPC4.txt";
     }
 
-    // Update is called once per frame
-    void Update()
+
+    public class playerData
     {
-        
+        public string playerName =null;
+        public int currency = 0;
+        public bool ai = false;
     }
 
     private void OnEnable()
@@ -44,22 +40,34 @@ public class PlayerInfo : MonoBehaviour
 
     #region Functions
 
-    private void createPlayers()
+    /// <summary>
+    /// Check what file name to return
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <returns></returns>
+    public string checkFile(string fileName)
     {
+        switch (fileName) {
+            case "player":
+                return playerFile;
 
-        //Players player;
-        //player.Player = new Player();
-        //player.name = "Player";
-        //player.currency = 100;
-        //player.isAI = false;
-        //players.Add(player);
+            case "npc1":
+                return npc1File;
 
-        //Players npc1;
-        //npc1.Player = npcPrefab;
-        //npc1.name = "NPC1";
-        //npc1.currency = 100;
-        //npc1.isAI = false;
-        //players.Add(npc1);
+            case "npc2":
+                return npc2File;
+
+            case "npc3":
+                return npc3File;
+
+            case "npc4":
+                return npc4File;
+
+
+            default:
+                return null;
+
+        }
 
     }
 
@@ -113,9 +121,14 @@ public class PlayerInfo : MonoBehaviour
 
     public void Player_Ask(object sender, Player.AskForInfo args) 
     {
-        //loop through the players list and return the senders info
+        string file = checkFile(args.file);
+        string saveString = File.ReadAllText(file);
+        playerData newPlayer;
+        newPlayer = JsonUtility.FromJson<playerData>(saveString);
+        SendPlayerInfo((Player)sender, newPlayer.playerName, newPlayer.currency, newPlayer.ai);
     }
 
+    
 
     #endregion
 }

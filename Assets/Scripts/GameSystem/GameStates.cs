@@ -27,6 +27,15 @@ public class GameStates : MonoBehaviour
 
     public Deck deck;
     public handRecognition handReco;
+    public PlayerInfo info;
+//test data
+    List<Player> newPlayers;
+    public Player player;
+    public Player npc1;
+    public Player npc2;
+    public Player npc3;
+    public Player npc4;
+
     bool allPlayersBigBlind = false;
     int round;
     public int pot;
@@ -51,6 +60,13 @@ public class GameStates : MonoBehaviour
 
     void Start()
     {
+        //test data
+        newPlayers.Add(player);
+        newPlayers.Add(npc1);
+        newPlayers.Add(npc2);
+        newPlayers.Add(npc3);
+        newPlayers.Add(npc4);
+
         round = 1;
         pot = 0;
         bet = 0;
@@ -58,6 +74,7 @@ public class GameStates : MonoBehaviour
         bigBlindAmt = 2;
         playerOrderIndex = 0;
         checkGameState();
+        
     }
 
     public void OnEnable()
@@ -93,6 +110,7 @@ public class GameStates : MonoBehaviour
         switch (state)
         {
             case states.Initial:
+                gameInitialize(newPlayers);
                 break;
 
             case states.Deal:

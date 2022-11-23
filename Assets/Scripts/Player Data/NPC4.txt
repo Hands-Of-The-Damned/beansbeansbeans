@@ -1,0 +1,1 @@
+{"playerName":"NPC4","currency":100,"ai":false}

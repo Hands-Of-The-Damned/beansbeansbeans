@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
         PlayHand
     }
 
+    public string file;
     GameObject PlayerPreFab;
     public playerHand hand;
     public string playerName;
@@ -23,8 +24,14 @@ public class Player : MonoBehaviour
     public bool raised;
     public bool folded;
     public bool isAI;
-    states state; 
+    public bool isTurn;
+    states state;
 
+
+    private void Awake()
+    {
+        this.Ask(file);
+    }
     private void Start()
     {
         state = states.Waiting;
@@ -34,34 +41,34 @@ public class Player : MonoBehaviour
         playedArcanaThisRound = false;
         raised = false;
         folded = false;
-        currency = 100;
-        playerName = "Brongus";
+        isTurn = false;
+        //playerName = "Brongus";
     }
 
     private void Update()
     {
         checkState();
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F) && isTurn)
         {
             setFold(!folded);
             Debug.Log(playerName + " fold " + folded);
         }
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.UpArrow) && isTurn)
         {
             setBet(bet += 1);
             Debug.Log(playerName + " bet " + bet);
         }
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKeyDown(KeyCode.DownArrow) && isTurn)
         {
             setBet(bet -= 1);
             Debug.Log(playerName + " bet " + bet);
         }
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.C) && isTurn)
         {
             setBet(currentBetToMatch);
             Debug.Log(playerName + " bet "+bet);
         }
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && isTurn)
         {
             playHand();
             Debug.Log(playerName + " ended turn");
@@ -95,7 +102,7 @@ public class Player : MonoBehaviour
 
     public Player()
     {
-        this.Ask();
+        this.Ask(file);
     }
 
 
@@ -267,6 +274,7 @@ public class Player : MonoBehaviour
             player.setFold(false);
             player.setBet(0);
             player.setRaised(false);
+            player.isTurn = false;
 
         }
     }
@@ -307,17 +315,18 @@ public class Player : MonoBehaviour
 
     public class AskForInfo
     {
-        public AskForInfo()
+        public string file;
+        public AskForInfo(string playerFile)
         {
-
+            file = playerFile;
         }
     }
 
     public static event System.EventHandler<AskForInfo> AskInfo;
 
-    public void Ask()
+    public void Ask(string playerFile)
     {
-        AskInfo?.Invoke(this, new AskForInfo());
+        AskInfo?.Invoke(this, new AskForInfo(playerFile));
     }
 
 
@@ -352,6 +361,7 @@ public class Player : MonoBehaviour
             currentBetToMatch = args.currentBet;
             currentPot = args.currentPot;
             checkCurrentRound(args.currentRound);
+            isTurn = true;
             state = states.PlayHand;
         }
     }
