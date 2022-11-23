@@ -206,6 +206,7 @@ public class GameStates : MonoBehaviour
         allPlayersBigBlind = checkAllPlayersBigBlind();
         updateBigBlind();
         takeInitalBets();
+        setPlayerOrder();
         state = states.PromptPlayer;
     }
 
@@ -258,6 +259,7 @@ public class GameStates : MonoBehaviour
         Debug.Log(winner.GetComponent<Player>().playerName);
         resetPlayersInRound();
         resetPlayedCurrentRound();
+        setPlayerOrder();
         round = 1;
         state = states.WaitForPlayer;
     }
@@ -516,6 +518,7 @@ public class GameStates : MonoBehaviour
     /// </summary>
     public void setPlayerOrder()
     {
+        playerOrder.Clear();
         int i = 0;
         foreach (PlayerContainer x in players)
         {
