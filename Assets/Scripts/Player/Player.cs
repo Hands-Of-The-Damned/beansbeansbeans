@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
         raised = false;
         folded = false;
         isTurn = false;
-        //playerName = "Brongus";
+        thisPlayer = GetComponent<GameObject>();
     }
 
     private void Update()
@@ -349,7 +349,7 @@ public class Player : MonoBehaviour
 
     private void GameStates_Deal(object sender, GameStates.DealToPlayerEvent args)
     {
-        if (args.player == this)
+        if (args.player == thisPlayer)
         {
             //recive the card
             hand.hand.Add(args.card);
@@ -358,7 +358,7 @@ public class Player : MonoBehaviour
 
     private void GameStates_BettingRoundInfo(object sender, GameStates.SendBettingRoundInfoEvent args)
     {
-        if (args.player == this)
+        if (args.player == thisPlayer)
         {
             //Recive round info and let this player play their hand
             currentBetToMatch = args.currentBet;
@@ -372,7 +372,7 @@ public class Player : MonoBehaviour
 
     public void GameStates_BigBlindBetEvent(object sender, GameStates.BigBlindBetEvent args)
     {
-        if (args.player == this)
+        if (args.player == thisPlayer)
         {
             blindBet(args.bet);
         }
@@ -380,7 +380,7 @@ public class Player : MonoBehaviour
 
     public void GameStates_SmallBlindBetEvent(object sender, GameStates.SmallBlindBetEvent args)
     {
-        if (args.player == this)
+        if (args.player == thisPlayer)
         {
             blindBet(args.bet);
         }
@@ -404,7 +404,7 @@ public class Player : MonoBehaviour
 
     public void PlayerInfo_PlayerInfo(object sender, PlayerInfo.SendPlayerInfoEvent args)
     {
-        if(args.player == this)
+        if(args.player == thisPlayer)
         {
             setName(args.playerName);
             setAI(args.playerIsAI);
