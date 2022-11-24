@@ -144,6 +144,11 @@ public class handRecognition : MonoBehaviour
                     {
                         HighCardSuit = highSuit;
                     }
+                    if(HighCardRank == 1)
+                    {
+                        HighCardRank = 15;
+                        return true;
+                    }
                 }
                 checkFlag = false;
 
@@ -199,6 +204,11 @@ public class handRecognition : MonoBehaviour
                     {
                         HighCardSuit = highSuit;
                     }
+                    if (HighCardRank == 1)
+                    {
+                        HighCardRank = 15;
+                        return true;
+                    }
                 }
                 checkFlag = false;
             }
@@ -226,8 +236,27 @@ public class handRecognition : MonoBehaviour
                 if (check >= winCond)
                 {
                     flag = true;
-                    HighCardRank = cards[j].CardRank;
-                    HighCardSuit = cards[j].CardSuit;
+
+                    //find high card in flush.
+                    int max = int.MinValue;
+                    for (int k = 0; k < cards.Length; k++)
+                    {
+                        if (cards[k].CardRank > max && cards[k].CardSuit == i)
+                        {
+                            max = cards[k].CardRank;
+                        }
+                        if (cards[k].CardRank == 1 && cards[k].CardSuit == i)
+                        {
+                            max = 15;
+                        }
+                    }
+                    HighCardRank = max;
+                    HighCardSuit = i;
+                    if (HighCardRank == 1)
+                    {
+                        HighCardRank = 15;
+                        return true;
+                    }
                 }
             }
         }
@@ -283,6 +312,11 @@ public class handRecognition : MonoBehaviour
                         {
                             HighCardSuit = highSuit;
                         }
+                        if (HighCardRank == 1)
+                        {
+                            HighCardRank = 15;
+                            return true;
+                        }
                     }
                     checkFlag = false;
                 }
@@ -314,6 +348,11 @@ public class handRecognition : MonoBehaviour
                     flag = true;
                     HighCardRank = cards[j].CardRank;
                     HighCardSuit = cards[j].CardSuit;
+                    if (HighCardRank == 1)
+                    {
+                        HighCardRank = 15;
+                        return true;
+                    }
                 }
             }
         }
@@ -343,6 +382,11 @@ public class handRecognition : MonoBehaviour
                     flag = true;
                     HighCardRank = cards[j].CardRank;
                     HighCardSuit = cards[j].CardSuit;
+                    if (HighCardRank == 1)
+                    {
+                        HighCardRank = 15;
+                        return true;
+                    }
                 }
             }
         }
@@ -370,6 +414,11 @@ public class handRecognition : MonoBehaviour
                     flag = true;
                     HighCardRank = cards[j].CardRank;
                     HighCardSuit = cards[j].CardSuit;
+                    if (HighCardRank == 1)
+                    {
+                        HighCardRank = 15;
+                        return true;
+                    }
                 }
             }
         }
@@ -382,6 +431,7 @@ public class handRecognition : MonoBehaviour
     {
         bool flag1 = false;
         bool flag2 = false;
+        bool aceFlag = false;
         int count = 0;
         int winCond = 2 - wildRankCount;
         int highCardInd = -1;
@@ -400,6 +450,10 @@ public class handRecognition : MonoBehaviour
 
             if ((count >= winCond) && !flag1)
             {
+                if (cards[highCardInd].CardRank == 1)
+                {
+                    aceFlag = true;
+                }
                 flag1 = true;
                 count = 0;
             }
@@ -409,6 +463,11 @@ public class handRecognition : MonoBehaviour
                 flag2 = true;
                 HighCardRank = cards[highCardInd].CardRank;
                 HighCardSuit = cards[highCardInd].CardSuit;
+                if (aceFlag) 
+                { 
+                    HighCardRank = 15; 
+                    return true;
+                }
             }
         }
 
@@ -420,6 +479,7 @@ public class handRecognition : MonoBehaviour
     {
         bool flag3P = false;
         bool flag2P = false;
+        bool aceFlag = false;
         int count1 = 0;
         int highCardInd = -1;
         //target winCond
@@ -443,6 +503,10 @@ public class handRecognition : MonoBehaviour
             if (count1 >= winCond3P && !flag3P)
             {
                 flag3P = true;
+                if (cards[highCardInd].CardRank == 1)
+                {
+                    aceFlag = true;
+                }
                 winCond2P = winCond2P + 1;
                 count1 = 0;
             }
@@ -450,6 +514,10 @@ public class handRecognition : MonoBehaviour
             else if (count1 >= winCond2P && !flag2P)
             {
                 flag2P = true;
+                if (cards[highCardInd].CardRank == 1)
+                {
+                    aceFlag = true;
+                }
                 winCond3P = winCond3P + 1;
                 count1 = 0;
             }
@@ -459,6 +527,11 @@ public class handRecognition : MonoBehaviour
                 flag3P = true;
                 HighCardRank = cards[highCardInd].CardRank;
                 HighCardSuit = cards[highCardInd].CardSuit;
+                if (aceFlag)
+                {
+                    HighCardRank = 15;
+                    return true;
+                }
             }
 
             else if (flag3P && count1 >= winCond2P)
@@ -466,6 +539,11 @@ public class handRecognition : MonoBehaviour
                 flag2P = true;
                 HighCardRank = cards[highCardInd].CardRank;
                 HighCardSuit = cards[highCardInd].CardSuit;
+                if (aceFlag)
+                {
+                    HighCardRank = 15;
+                    return true;
+                }
             }
         }
 
@@ -484,10 +562,26 @@ public class handRecognition : MonoBehaviour
 
         //default High Card
         int PokerHandRanking = 1;
-        PokerHand.Sort((x, y) => x.CardRank.CompareTo(y.CardRank));
-        HighCardRank = PokerHand.First().CardRank;
-        HighCardSuit = PokerHand.First().CardSuit;
 
+        int max = int.MinValue;
+        for (int k = 0; k < PokerHand.Count; k++)
+        {
+            if (PokerHand[k].CardRank > max)
+            {
+                max = PokerHand[k].CardRank;
+                HighCardRank = PokerHand[k].CardRank;
+                HighCardSuit = PokerHand[k].CardSuit;
+            }
+            if (PokerHand[k].CardRank == 1)
+            {
+                HighCardRank = 15;
+                HighCardSuit = PokerHand[k].CardSuit;
+                break;
+            }
+        }
+
+
+        PokerHand.Sort((x, y) => x.CardRank.CompareTo(y.CardRank));
         //Search for pair, three of a kind, four-of-a-kind, two pair, and full house, which each can take the full hand.
         if (RoyalFlushCheck(PokerHand.ToArray()))
         {
