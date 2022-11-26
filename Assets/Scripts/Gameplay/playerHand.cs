@@ -14,11 +14,14 @@ public class playerHand : MonoBehaviour
 
     public UnityEvent playCard;
 
+    public handRecognition handRecognition;
+
     // Start is called before the first frame update
     private void Start()
     {
-        //get deck component to make life easier
+        //get deck component to make life easierh
         deck = GameObject.FindObjectOfType<Deck>();
+        handRecognition = GameObject.FindObjectOfType<handRecognition>();
 
     }
 
@@ -66,7 +69,7 @@ public class playerHand : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Q))
         {
             Debug.Log("Drawing Cards...");
-            drawCardsFromDeck(5);
+            drawCardsFromDeck(8);
         }
 
         if (Input.GetKeyDown(KeyCode.H))
@@ -114,7 +117,13 @@ public class playerHand : MonoBehaviour
 
             }
 
+        }
 
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            int[] arr = new int[3];
+            arr = handRecognition.HandRecognition(this);
+            Debug.Log("Card Hand Value:" + arr[0] + " " + arr[1] + " " + arr[2]);
         }
 
     }
