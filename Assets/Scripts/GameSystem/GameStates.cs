@@ -199,7 +199,7 @@ public class GameStates : MonoBehaviour
                 if (x.inRound)
                 {
                     DealToPlayer(x.player, dealToPlayer(1));
-                    Debug.Log("dealt card to: " + x);
+                    Debug.Log("dealt card to: " + x.player);
                 }
             }
         }
@@ -256,7 +256,7 @@ public class GameStates : MonoBehaviour
     {
         //evaluate hands and declare a winner for the round, maybe use an event for this
         GameObject winner = compareHands();
-        Debug.Log(winner.GetComponent<Player>().playerName);
+        Debug.Log("winner" + winner.GetComponent<Player>().playerName);
         resetPlayersInRound();
         resetPlayedCurrentRound();
         setPlayerOrder();

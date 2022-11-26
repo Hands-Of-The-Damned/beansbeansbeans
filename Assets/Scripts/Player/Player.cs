@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
     public bool folded;
     public bool isAI;
     public bool isTurn;
+    public bool isShowdown;
     states state;
 
 
@@ -41,6 +42,7 @@ public class Player : MonoBehaviour
         raised = false;
         folded = false;
         isTurn = false;
+        isShowdown = false;
     }
 
     private void Update()
@@ -71,6 +73,11 @@ public class Player : MonoBehaviour
             playHand();
             Debug.Log(playerName + " ended turn");
         }
+        if (Input.GetKeyDown(KeyCode.Space) && isShowdown)
+        {
+            isShowdown = false;
+            SendShowDownResponse();
+        }
     }
 
     public void OnEnable()
@@ -81,6 +88,7 @@ public class Player : MonoBehaviour
         GameStates.SmallBlind += GameStates_SmallBlindBetEvent;
         GameStates.NewHand += GameStates_NewHand;
         PlayerInfo.SendPlayer += PlayerInfo_PlayerInfo;
+        GameStates.ShowDown += GameStates_Showdown;
     }
 
     public void OnDisable()
@@ -91,6 +99,8 @@ public class Player : MonoBehaviour
         GameStates.SmallBlind -= GameStates_SmallBlindBetEvent;
         GameStates.NewHand -= GameStates_NewHand;
         PlayerInfo.SendPlayer -= PlayerInfo_PlayerInfo;
+        GameStates.ShowDown += GameStates_Showdown;
+
     }
 
 
@@ -393,7 +403,7 @@ public class Player : MonoBehaviour
 
     public void GameStates_NewHand(object sender, GameStates.NewHandEvent args)
     {
-        this.hand.hand.Clear();
+        hand.hand.Clear();
     }
 
     public void UI_BetButton()
@@ -415,6 +425,11 @@ public class Player : MonoBehaviour
             setAI(args.playerIsAI);
             setCurrency(args.playerCurrency);
         }
+    }
+
+    public void GameStates_Showdown(object sender, GameStates.ShowDownEvent args)
+    {
+        isShowdown = true;
     }
 
 
