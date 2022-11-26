@@ -54,7 +54,8 @@ public class handRecognition : MonoBehaviour
     int wildSuitCount = 0;
     int trueWildCount = 0;
 
-    handRecognition(playerHand analyzedHand)
+    public handRecognition() { }
+    public handRecognition(playerHand analyzedHand)
     {
         AnalyzedHand = analyzedHand;
         getHandInfo();
@@ -419,6 +420,7 @@ public class handRecognition : MonoBehaviour
                         HighCardRank = 15;
                         return true;
                     }
+                    return true;
                 }
             }
         }
@@ -557,7 +559,18 @@ public class handRecognition : MonoBehaviour
     /// <returns>Returns a set of three integers [PokerHandRanking, HighCardRank, HighCardSuit]</returns>
     public int[] HandRecognition(playerHand playerHand)
     {
+        //Behavoir is not reset meaning it must be reset
+        AnalyzedHand = null;
+
+        HighCardRank = 0;
+        HighCardSuit = 0;
+        PokerHand = new List<MinorArcana>();
+        EffectsHand = new List<MajorArcana>();
+        wildRankCount = 0;
+        wildSuitCount = 0;
+        trueWildCount = 0;
         this.AnalyzedHand = playerHand;
+
         getHandInfo();
 
         //default High Card
@@ -623,7 +636,7 @@ public class handRecognition : MonoBehaviour
             PokerHandRanking = 3;
         }
 
-        else if (TwoPairCheck(PokerHand.ToArray()))
+        else if (PairCheck(PokerHand.ToArray()))
         {
             PokerHandRanking = 2;
         }
