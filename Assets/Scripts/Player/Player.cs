@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     }
 
     public string file;
-    GameObject thisPlayer;
+    public GameObject thisPlayer;
     public playerHand hand;
     public string playerName;
     public int round;
@@ -43,7 +43,6 @@ public class Player : MonoBehaviour
         raised = false;
         folded = false;
         isTurn = false;
-        thisPlayer = GetComponent<GameObject>();
     }
 
     private void Update()
@@ -353,6 +352,7 @@ public class Player : MonoBehaviour
         {
             //recive the card
             hand.hand.Add(args.card);
+            Debug.Log(args.card);
         }
     }
 
