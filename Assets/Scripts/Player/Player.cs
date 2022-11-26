@@ -12,7 +12,6 @@ public class Player : MonoBehaviour
     }
 
     public string file;
-    public GameObject thisPlayer;
     public playerHand hand;
     public string playerName;
     public int round;
@@ -30,8 +29,7 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        thisPlayer = GetComponent<GameObject>();
-        this.Ask(thisPlayer, file);
+        Ask(gameObject, file);
     }
     private void Start()
     {
@@ -102,7 +100,7 @@ public class Player : MonoBehaviour
 
     public Player()
     {
-        this.Ask(thisPlayer, file);
+       
     }
 
 
@@ -167,7 +165,14 @@ public class Player : MonoBehaviour
     /// <param name="x"></param>
     public void setBet(int x)
     {
+        if(bet == 0 && x < 0)
+        {
+            bet = 0;
+        }
+        else
+        {
         bet = x;
+        }
         if(bet > currentBetToMatch)
         {
             raised = true;
@@ -218,15 +223,15 @@ public class Player : MonoBehaviour
     {
         if (folded)
         {
-            SendRoundInfo(thisPlayer, folded, raised, bet);
+            SendRoundInfo(gameObject, folded, raised, bet);
         }
         else if (raised)
         {
-            SendRoundInfo(thisPlayer, folded, raised, bet);
+            SendRoundInfo(gameObject, folded, raised, bet);
         }
         else
         {
-            SendRoundInfo(thisPlayer, folded, raised, bet);
+            SendRoundInfo(gameObject, folded, raised, bet);
         }
     }
 
@@ -348,7 +353,7 @@ public class Player : MonoBehaviour
 
     private void GameStates_Deal(object sender, GameStates.DealToPlayerEvent args)
     {
-        if (args.player == thisPlayer)
+        if (args.player == gameObject)
         {
             //recive the card
             hand.hand.Add(args.card);
@@ -358,7 +363,7 @@ public class Player : MonoBehaviour
 
     private void GameStates_BettingRoundInfo(object sender, GameStates.SendBettingRoundInfoEvent args)
     {
-        if (args.player == thisPlayer)
+        if (args.player == gameObject)
         {
             //Recive round info and let this player play their hand
             currentBetToMatch = args.currentBet;
@@ -372,7 +377,7 @@ public class Player : MonoBehaviour
 
     public void GameStates_BigBlindBetEvent(object sender, GameStates.BigBlindBetEvent args)
     {
-        if (args.player == thisPlayer)
+        if (args.player == gameObject)
         {
             blindBet(args.bet);
         }
@@ -380,7 +385,7 @@ public class Player : MonoBehaviour
 
     public void GameStates_SmallBlindBetEvent(object sender, GameStates.SmallBlindBetEvent args)
     {
-        if (args.player == thisPlayer)
+        if (args.player == gameObject)
         {
             blindBet(args.bet);
         }
@@ -404,7 +409,7 @@ public class Player : MonoBehaviour
 
     public void PlayerInfo_PlayerInfo(object sender, PlayerInfo.SendPlayerInfoEvent args)
     {
-        if(args.player == thisPlayer)
+        if(args.player == gameObject)
         {
             setName(args.playerName);
             setAI(args.playerIsAI);

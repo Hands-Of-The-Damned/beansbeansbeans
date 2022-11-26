@@ -20,7 +20,6 @@ public class PlayerInfo : MonoBehaviour
         npc4File = Application.dataPath + "/Scripts/Player Data/NPC4.txt";
     }
 
-    [System.Serializable]
     public class playerData
     {
         public string playerName =null;

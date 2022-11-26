@@ -169,7 +169,7 @@ public class GameStates : MonoBehaviour
         foreach(GameObject x in newPlayers)
         {
             PlayerContainer player;
-            player.player = x.GetComponent<GameObject>();
+            player.player = x.gameObject;
             player.inGame = true;
             player.inRound = true;
             player.playedCurrentRound = false;
