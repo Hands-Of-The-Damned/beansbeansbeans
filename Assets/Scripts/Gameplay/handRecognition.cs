@@ -61,6 +61,101 @@ public class handRecognition : MonoBehaviour
         getHandInfo();
     }
 
+    /// <summary>
+    /// Please see Card.cs for more information on card ranking info
+    /// </summary>
+    /// <param name="playerHand">The player hand that is to be analyzed, and given a ranking.</param>
+    /// <returns>Returns a set of three integers [PokerHandRanking, HighCardRank, HighCardSuit]</returns>
+    public int[] HandRecognition(playerHand playerHand)
+    {
+        //Behavoir is not reset meaning it must be reset
+        AnalyzedHand = null;
+
+        HighCardRank = 0;
+        HighCardSuit = 0;
+        PokerHand = new List<MinorArcana>();
+        EffectsHand = new List<MajorArcana>();
+        wildRankCount = 0;
+        wildSuitCount = 0;
+        trueWildCount = 0;
+        this.AnalyzedHand = playerHand;
+
+        getHandInfo();
+
+        //default High Card
+        int PokerHandRanking = 1;
+
+        int max = int.MinValue;
+        for (int k = 0; k < PokerHand.Count; k++)
+        {
+            if (PokerHand[k].CardRank > max)
+            {
+                max = PokerHand[k].CardRank;
+                HighCardRank = PokerHand[k].CardRank;
+                HighCardSuit = PokerHand[k].CardSuit;
+            }
+            if (PokerHand[k].CardRank == 1)
+            {
+                HighCardRank = 15;
+                HighCardSuit = PokerHand[k].CardSuit;
+                break;
+            }
+        }
+
+
+        PokerHand.Sort((x, y) => x.CardRank.CompareTo(y.CardRank));
+        //Search for pair, three of a kind, four-of-a-kind, two pair, and full house, which each can take the full hand.
+        if (RoyalFlushCheck(PokerHand.ToArray()))
+        {
+            PokerHandRanking = 10;
+        }
+
+        else if (StraightFlushCheck(PokerHand.ToArray()))
+        {
+            PokerHandRanking = 9;
+        }
+
+        else if (FourOfAKindCheck(PokerHand.ToArray()))
+        {
+            PokerHandRanking = 8;
+        }
+
+        else if (FullHouseCheck(PokerHand.ToArray()))
+        {
+            PokerHandRanking = 7;
+        }
+
+        else if (FlushCheck(PokerHand.ToArray()))
+        {
+            PokerHandRanking = 6;
+        }
+
+        else if (StraightCheck(PokerHand.ToArray()))
+        {
+            PokerHandRanking = 5;
+        }
+
+        else if (ThreeOfAKindCheck(PokerHand.ToArray()))
+        {
+            PokerHandRanking = 4;
+        }
+
+        else if (TwoPairCheck(PokerHand.ToArray()))
+        {
+            PokerHandRanking = 3;
+        }
+
+        else if (PairCheck(PokerHand.ToArray()))
+        {
+            PokerHandRanking = 2;
+        }
+
+        //manipulate array specifically to check it against straights
+        int[] HandRecognitionReturn = new int[] { PokerHandRanking, HighCardRank, HighCardSuit };
+
+        return HandRecognitionReturn;
+    }
+
     void getHandInfo()
     {
         //Get info for major and minor arcana handtypes
@@ -552,98 +647,5 @@ public class handRecognition : MonoBehaviour
         return flag2P && flag3P;
     }
     
-    /// <summary>
-    /// Please see Card.cs for more information on card ranking info
-    /// </summary>
-    /// <param name="playerHand">The player hand that is to be analyzed, and given a ranking.</param>
-    /// <returns>Returns a set of three integers [PokerHandRanking, HighCardRank, HighCardSuit]</returns>
-    public int[] HandRecognition(playerHand playerHand)
-    {
-        //Behavoir is not reset meaning it must be reset
-        AnalyzedHand = null;
-
-        HighCardRank = 0;
-        HighCardSuit = 0;
-        PokerHand = new List<MinorArcana>();
-        EffectsHand = new List<MajorArcana>();
-        wildRankCount = 0;
-        wildSuitCount = 0;
-        trueWildCount = 0;
-        this.AnalyzedHand = playerHand;
-
-        getHandInfo();
-
-        //default High Card
-        int PokerHandRanking = 1;
-
-        int max = int.MinValue;
-        for (int k = 0; k < PokerHand.Count; k++)
-        {
-            if (PokerHand[k].CardRank > max)
-            {
-                max = PokerHand[k].CardRank;
-                HighCardRank = PokerHand[k].CardRank;
-                HighCardSuit = PokerHand[k].CardSuit;
-            }
-            if (PokerHand[k].CardRank == 1)
-            {
-                HighCardRank = 15;
-                HighCardSuit = PokerHand[k].CardSuit;
-                break;
-            }
-        }
-
-
-        PokerHand.Sort((x, y) => x.CardRank.CompareTo(y.CardRank));
-        //Search for pair, three of a kind, four-of-a-kind, two pair, and full house, which each can take the full hand.
-        if (RoyalFlushCheck(PokerHand.ToArray()))
-        {
-            PokerHandRanking = 10;
-        }
-
-        else if (StraightFlushCheck(PokerHand.ToArray()))
-        {
-            PokerHandRanking = 9;
-        }
-        
-        else if (FourOfAKindCheck(PokerHand.ToArray()))
-        {
-            PokerHandRanking = 8;
-        }
-
-        else if (FullHouseCheck(PokerHand.ToArray()))
-        {
-            PokerHandRanking = 7;
-        }
-
-        else if (FlushCheck(PokerHand.ToArray()))
-        {
-            PokerHandRanking = 6;
-        }
-
-        else if (StraightCheck(PokerHand.ToArray()))
-        {
-            PokerHandRanking = 5;
-        }
-
-        else if (ThreeOfAKindCheck(PokerHand.ToArray()))
-        {
-            PokerHandRanking = 4;
-        }
-        
-        else if (TwoPairCheck(PokerHand.ToArray()))
-        {
-            PokerHandRanking = 3;
-        }
-
-        else if (PairCheck(PokerHand.ToArray()))
-        {
-            PokerHandRanking = 2;
-        }
-
-        //manipulate array specifically to check it against straights
-        int[] HandRecognitionReturn = new int[] {PokerHandRanking, HighCardRank, HighCardSuit};
-
-        return HandRecognitionReturn;
-    }
+ 
 }
