@@ -8,57 +8,48 @@ using UnityEngine.Events;
 public class playerHand : MonoBehaviour
 {
     //Player hand
-    public List<string> hand;
+    public List<Card> hand = new List<Card>();
 
     public Deck deck;
 
     public UnityEvent playCard;
 
+    public handRecognition handRecognition;
+
     // Start is called before the first frame update
     private void Start()
     {
-        //get deck component to make life easier
+        //get deck component to make life easierh
         deck = GameObject.FindObjectOfType<Deck>();
+        handRecognition = GameObject.FindObjectOfType<handRecognition>();
 
-    }
-    private bool isMinor(string card)
-    {
-        if(card.Length > 6)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
     }
 
     //can only use major arcana
-    public void useCard(string card)
+    public void useCard(Card card)
     {
-        if (isMinor(card) == false) 
+        if (card.IsMinor == false) 
         {
-            playCard?.Invoke();
+            //Do a thing
             discardCard(card);
-            Debug.Log("Used " + card);
         }
 
     }
 
     //get rid of card, add to discard deck
-    public void discardCard(string card)
+    public void discardCard(Card card)
     {
         hand.Remove(card);
         deck.discardPile.Add(card);
     }
     
     //get minor arcana card
-    public string[] getMinor()
+    public Card[] getMinor()
     {
-        List<string> minorArcana = new List<string>();
+        List<Card> minorArcana = new List<Card>();
         for (int i = 0; i < hand.Count; i++)
         {
-            if (isMinor(hand[i]))
+            if (hand[i].IsMinor)
             {
                 minorArcana.Add(hand[i]);
             }
@@ -67,55 +58,27 @@ public class playerHand : MonoBehaviour
         return minorArcana.ToArray();
     }
 
-    //Add R to end if no R is there. If R is there, remove R. Might be broken, needs review
-
-    public string Reverse(string cardToReverse)
-    {
-        if(isMinor(cardToReverse) == false)
-        {
-            if (isReversed(cardToReverse))
-            {
-                cardToReverse = cardToReverse.Remove(cardToReverse.IndexOf('R'));
-                return cardToReverse;
-            }
-            else
-            {
-                cardToReverse = cardToReverse + 'R';
-                return cardToReverse;
-            }
-        }
-        else
-        {
-            return cardToReverse;
-        }
-    }
-
-    public bool isReversed(string cardToCheck)
-    {
-              
-        return cardToCheck.EndsWith('R');
-        
-    }
     public void drawCardsFromDeck(int NumToDraw)
     {
-        string [] cards = deck.deal(NumToDraw).ToArray<string>();
+        Card [] cards = deck.deal(NumToDraw);
         hand.AddRange(cards);
     }
-    /*
+    
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
             Debug.Log("Drawing Cards...");
-            drawCardsFromDeck(5);
+            drawCardsFromDeck(8);
         }
 
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.H))
         {
             Debug.Log("Showing Cards in Hand...");
             foreach (var card in hand)
             {
-                Debug.Log(card);
+                Debug.Log(card.CardName);
+                Debug.Log(card.IsReverse);
             }
         }
 
@@ -124,7 +87,7 @@ public class playerHand : MonoBehaviour
             Debug.Log("Reversing all cards in hand...");
                 for(int i = 0; i < hand.Count; i++)
                 {
-                    hand[i] = Reverse(hand[i]);
+                    hand[i].ReverseCard();
                 }
             
         }
@@ -154,11 +117,17 @@ public class playerHand : MonoBehaviour
 
             }
 
+        }
 
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            int[] arr = new int[3];
+            arr = handRecognition.HandRecognition(this);
+            Debug.Log("Card Hand Value:" + arr[0] + " " + arr[1] + " " + arr[2]);
         }
 
     }
-    */
+    
 
 
 }

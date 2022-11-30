@@ -12,9 +12,9 @@ public class PlayerEventPublisher : MonoBehaviour
     public class SendRoundDecision
     {
         public PlayerEventPublisher eventSystem;
-        bool fold;
-        bool raise;
-        int bet;
+        public bool fold;
+        public bool raise;
+        public int bet;
 
         public SendRoundDecision(bool didFold, bool willRaise,  int betAmt)
         {
