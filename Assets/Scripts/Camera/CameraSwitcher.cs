@@ -15,6 +15,7 @@ public class CameraSwitcher : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera NpcCamera2;
     [SerializeField] CinemachineVirtualCamera NpcCamera3;
     [SerializeField] CinemachineVirtualCamera dealerCamera;
+    [SerializeField] CinemachineVirtualCamera bowlCamera;
 
     Ray ray;
     RaycastHit hit;
@@ -87,6 +88,15 @@ public class CameraSwitcher : MonoBehaviour
             {
                 SwitchPriority("r");
             }
+            //Bowl Zoom
+            if (hit.collider.name == "moneyBowl" && Input.GetMouseButtonDown(0))
+            {
+                SwitchPriority("bowl");
+            }
+            else if (hit.collider.name == "moneyBowl" && Input.GetMouseButtonDown(1))
+            {
+                SwitchPriority("m");
+            }
         }
     }
 
@@ -109,6 +119,7 @@ public class CameraSwitcher : MonoBehaviour
             NpcCamera1.Priority = 0;
             NpcCamera2.Priority = 0;
             NpcCamera3.Priority = 0;
+            bowlCamera.Priority = 0;
         }
         else if(cameraToChange == "r")
         {
@@ -121,6 +132,7 @@ public class CameraSwitcher : MonoBehaviour
             NpcCamera1.Priority = 0;
             NpcCamera2.Priority = 0;
             NpcCamera3.Priority = 0;
+            bowlCamera.Priority = 0;
         }
         else if(cameraToChange == "d")
         {
@@ -133,6 +145,7 @@ public class CameraSwitcher : MonoBehaviour
             NpcCamera1.Priority = 0;
             NpcCamera2.Priority = 0;
             NpcCamera3.Priority = 0;
+            bowlCamera.Priority = 0;
         }
         else if(cameraToChange == "m")
         {
@@ -145,6 +158,7 @@ public class CameraSwitcher : MonoBehaviour
             NpcCamera1.Priority = 0;
             NpcCamera2.Priority = 0;
             NpcCamera3.Priority = 0;
+            bowlCamera.Priority = 0;
         }
 
         else if(cameraToChange == "dealer")
@@ -158,6 +172,7 @@ public class CameraSwitcher : MonoBehaviour
             NpcCamera1.Priority = 0;
             NpcCamera2.Priority = 0;
             NpcCamera3.Priority = 0;
+            bowlCamera.Priority = 0;
         }
 
         else if(cameraToChange == "npc")
@@ -171,6 +186,7 @@ public class CameraSwitcher : MonoBehaviour
             NpcCamera1.Priority = 0;
             NpcCamera2.Priority = 0;
             NpcCamera3.Priority = 0;
+            bowlCamera.Priority = 0;
         }
 
         else if (cameraToChange == "npc1")
@@ -184,7 +200,8 @@ public class CameraSwitcher : MonoBehaviour
             NpcCamera1.Priority = 1;
             NpcCamera2.Priority = 0;
             NpcCamera3.Priority = 0;
-            
+            bowlCamera.Priority = 0;
+
         }
 
         else if (cameraToChange == "npc2")
@@ -198,6 +215,7 @@ public class CameraSwitcher : MonoBehaviour
             NpcCamera1.Priority = 0;
             NpcCamera2.Priority = 1;
             NpcCamera3.Priority = 0;
+            bowlCamera.Priority = 0;
 
         }
 
@@ -212,7 +230,22 @@ public class CameraSwitcher : MonoBehaviour
             NpcCamera1.Priority = 0;
             NpcCamera2.Priority = 0;
             NpcCamera3.Priority = 1;
+            bowlCamera.Priority = 0;
 
+        }
+
+        else if (cameraToChange == "bowl")
+        {
+            main.Priority = 0;
+            left.Priority = 0;
+            right.Priority = 0;
+            down.Priority = 0;
+            dealerCamera.Priority = 0;
+            NpcCamera.Priority = 0;
+            NpcCamera1.Priority = 0;
+            NpcCamera2.Priority = 0;
+            NpcCamera3.Priority = 0;
+            bowlCamera.Priority = 1;
         }
     }
 
