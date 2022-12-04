@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.UI;
 
 public class CameraSwitcher : MonoBehaviour
 {
@@ -22,13 +23,19 @@ public class CameraSwitcher : MonoBehaviour
 
     private bool dealerCameraActive;
 
-    
+    private bool bowlCamActive;
+
+    public GameObject betBronze;
+    public GameObject betSilver;
+    public GameObject betGold;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        betBronze.SetActive(false);
+        betSilver.SetActive(false);
+        betGold.SetActive(false);
     }
 
     // Update is called once per frame
@@ -88,15 +95,7 @@ public class CameraSwitcher : MonoBehaviour
             {
                 SwitchPriority("r");
             }
-            //Bowl Zoom
-            if (hit.collider.name == "moneyBowl" && Input.GetMouseButtonDown(0))
-            {
-                SwitchPriority("bowl");
-            }
-            else if (hit.collider.name == "moneyBowl" && Input.GetMouseButtonDown(1))
-            {
-                SwitchPriority("m");
-            }
+            
         }
     }
 
@@ -120,6 +119,9 @@ public class CameraSwitcher : MonoBehaviour
             NpcCamera2.Priority = 0;
             NpcCamera3.Priority = 0;
             bowlCamera.Priority = 0;
+            betBronze.SetActive(false);
+            betSilver.SetActive(false);
+            betGold.SetActive(false);
         }
         else if(cameraToChange == "r")
         {
@@ -133,6 +135,9 @@ public class CameraSwitcher : MonoBehaviour
             NpcCamera2.Priority = 0;
             NpcCamera3.Priority = 0;
             bowlCamera.Priority = 0;
+            betBronze.SetActive(false);
+            betSilver.SetActive(false);
+            betGold.SetActive(false);
         }
         else if(cameraToChange == "d")
         {
@@ -146,6 +151,9 @@ public class CameraSwitcher : MonoBehaviour
             NpcCamera2.Priority = 0;
             NpcCamera3.Priority = 0;
             bowlCamera.Priority = 0;
+            betBronze.SetActive(false);
+            betSilver.SetActive(false);
+            betGold.SetActive(false);
         }
         else if(cameraToChange == "m")
         {
@@ -159,6 +167,9 @@ public class CameraSwitcher : MonoBehaviour
             NpcCamera2.Priority = 0;
             NpcCamera3.Priority = 0;
             bowlCamera.Priority = 0;
+            betBronze.SetActive(false);
+            betSilver.SetActive(false);
+            betGold.SetActive(false);
         }
 
         else if(cameraToChange == "dealer")
@@ -173,6 +184,9 @@ public class CameraSwitcher : MonoBehaviour
             NpcCamera2.Priority = 0;
             NpcCamera3.Priority = 0;
             bowlCamera.Priority = 0;
+            betBronze.SetActive(false);
+            betSilver.SetActive(false);
+            betGold.SetActive(false);
         }
 
         else if(cameraToChange == "npc")
@@ -187,6 +201,9 @@ public class CameraSwitcher : MonoBehaviour
             NpcCamera2.Priority = 0;
             NpcCamera3.Priority = 0;
             bowlCamera.Priority = 0;
+            betBronze.SetActive(false);
+            betSilver.SetActive(false);
+            betGold.SetActive(false);
         }
 
         else if (cameraToChange == "npc1")
@@ -201,6 +218,9 @@ public class CameraSwitcher : MonoBehaviour
             NpcCamera2.Priority = 0;
             NpcCamera3.Priority = 0;
             bowlCamera.Priority = 0;
+            betBronze.SetActive(false);
+            betSilver.SetActive(false);
+            betGold.SetActive(false);
 
         }
 
@@ -216,6 +236,9 @@ public class CameraSwitcher : MonoBehaviour
             NpcCamera2.Priority = 1;
             NpcCamera3.Priority = 0;
             bowlCamera.Priority = 0;
+            betBronze.SetActive(false);
+            betSilver.SetActive(false);
+            betGold.SetActive(false);
 
         }
 
@@ -231,6 +254,9 @@ public class CameraSwitcher : MonoBehaviour
             NpcCamera2.Priority = 0;
             NpcCamera3.Priority = 1;
             bowlCamera.Priority = 0;
+            betBronze.SetActive(false);
+            betSilver.SetActive(false);
+            betGold.SetActive(false);
 
         }
 
@@ -246,6 +272,10 @@ public class CameraSwitcher : MonoBehaviour
             NpcCamera2.Priority = 0;
             NpcCamera3.Priority = 0;
             bowlCamera.Priority = 1;
+            betBronze.SetActive(true);
+            betSilver.SetActive(true);
+            betGold.SetActive(true);
+            bowlCamActive = true;
         }
     }
 
