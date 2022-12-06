@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2082780766840011203}
   - component: {fileID: 2082780766840011202}
   - component: {fileID: 2083938276320776504}
+  - component: {fileID: 7256323674140635731}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -118,7 +119,29 @@ MonoBehaviour:
   playCard:
     m_PersistentCalls:
       m_Calls: []
-  handRecognition: {fileID: 0}
+--- !u!114 &7256323674140635731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2082780766840011197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9012d4240a4e6204abae34cd36e062b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hand: {fileID: 0}
+  playerName: 
+  round: 0
+  currentBetToMatch: 0
+  currentPot: 0
+  bet: 0
+  currency: 0
+  playedArcanaThisRound: 0
+  raised: 0
+  folded: 0
+  isAI: 0
 --- !u!1 &2082780767837629427
 GameObject:
   m_ObjectHideFlags: 0
