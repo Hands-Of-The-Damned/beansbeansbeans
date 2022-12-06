@@ -12,6 +12,7 @@ public class playerHand : MonoBehaviour
 {
     //Player hand
     public List<Card> hand = new List<Card>();
+    public List<ChangeMaterial> handDisplays = new(5);
 
     public Deck deck;
 
@@ -59,7 +60,7 @@ public class playerHand : MonoBehaviour
     public void drawCardsFromDeck(int NumToDraw)
     {
         Card [] cards = deck.deal(NumToDraw);
-        hand.AddRange(cards);
+        hand = cards.ToList<Card>();
         
     }
     
@@ -70,11 +71,16 @@ public class playerHand : MonoBehaviour
     /// </summary>
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.Q))
-        //{
-        //    Debug.Log("Drawing Cards...");
-        //    drawCardsFromDeck(8);
-        //}
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Debug.Log("Drawing Cards...");
+            drawCardsFromDeck(5);
+            for (int i = 0; i < 5; i++)
+            {
+                if (hand[i] is MinorArcana)
+                    handDisplays[i].GetComponent<Renderer>().material = handDisplays[i].cardMat[(hand[i] as MinorArcana).CardRank];
+            }
+        }
 
         //if (Input.GetKeyDown(KeyCode.H))
         //{
@@ -82,7 +88,7 @@ public class playerHand : MonoBehaviour
         //    foreach (var card in hand)
         //    {
         //        Debug.Log(card.CardName + ' ' + card.IsReverse);
-                
+
         //    }
         //}
 
@@ -93,7 +99,7 @@ public class playerHand : MonoBehaviour
         //        {
         //            hand[i].ReverseCard();
         //        }
-            
+
         //}
 
         //if (Input.GetKeyDown(KeyCode.D))
@@ -107,7 +113,7 @@ public class playerHand : MonoBehaviour
 
         //    }
 
-            
+
         //}
 
         //if (Input.GetKeyDown(KeyCode.U))
