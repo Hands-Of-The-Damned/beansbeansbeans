@@ -1,3 +1,6 @@
+//Michael "Mickey" Kerr
+//2022
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -27,50 +30,7 @@ public class Deck : MonoBehaviour
         shuffle();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        //Debug code - to be transitioned for prod
 
-        //show deck - t
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            for (int i = 0; i < deck.Count; i++)
-            {
-                Debug.Log(deck[i].CardName);
-            }
-            
-        }
-        //shuffle - s
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            shuffle();
-            Debug.Log(deck);
-        }
-        //deal - d
-
-        //if (Input.GetKeyDown(KeyCode.D))
-        //{
-        //    Card[] cards = deal(5);
-
-        //    Debug.Log("Example Deal");
-
-        //    for(int i = 0; i < cards.Length; i++)
-        //    {
-        //        Debug.Log(cards[i].CardName);
-        //    }
-        //}
-
-        //show discads - e
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            for (int i = 0; i < discardPile.Count; i++)
-            {
-                Debug.Log(discardPile[i].CardName);
-            }
-        }
-    }
 
     //shuffle the deck
     public void shuffle()
@@ -127,5 +87,66 @@ public class Deck : MonoBehaviour
         }
         //reset deck location to 0
         //deckLocation = 0;
+    }
+
+    //Should only be called when absolutely necessary
+    public void resetDeck()
+    {
+        deck.Clear();
+        discardPile.Clear();
+
+        generateDeck();
+        shuffle();
+    }
+
+
+
+
+    /// <summary>
+    /// Code below is depreciated, or was utilized for testing purposes
+    /// </summary>
+    // Update is called once per frame
+    void Update()
+    {
+        //Debug code - to be transitioned for prod
+
+        //show deck - t
+        //if (Input.GetKeyDown(KeyCode.T))
+        //{
+        //    for (int i = 0; i < deck.Count; i++)
+        //    {
+        //        Debug.Log(deck[i].CardName);
+        //    }
+
+        //}
+        ////shuffle - s
+        //if (Input.GetKeyDown(KeyCode.S))
+        //{
+        //    shuffle();
+        //    Debug.Log(deck);
+        //}
+        ////deal - d
+
+        ////if (Input.GetKeyDown(KeyCode.D))
+        ////{
+        ////    Card[] cards = deal(5);
+
+        ////    Debug.Log("Example Deal");
+
+        ////    for(int i = 0; i < cards.Length; i++)
+        ////    {
+        ////        Debug.Log(cards[i].CardName);
+        ////    }
+        ////}
+
+        ////show discads - e
+
+        //if (Input.GetKeyDown(KeyCode.E))
+        //{
+        //    for (int i = 0; i < discardPile.Count; i++)
+        //    {
+        //        Debug.Log(discardPile[i].CardName);
+        //    }
+        //}
     }
 }
