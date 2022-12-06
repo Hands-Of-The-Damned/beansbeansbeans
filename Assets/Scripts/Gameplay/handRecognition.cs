@@ -1,3 +1,6 @@
+//Michael "Mickey" Kerr
+//2022
+
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -68,7 +71,7 @@ public class handRecognition : MonoBehaviour
     /// <returns>Returns a set of three integers [PokerHandRanking, HighCardRank, HighCardSuit]</returns>
     public int[] HandRecognition(playerHand playerHand)
     {
-        //Behavoir is not reset meaning it must be reset
+        //Behavoir is not reset on second hand being loaded in, meaning it must be reset before getting hand info
         AnalyzedHand = null;
 
         HighCardRank = 0;
@@ -104,6 +107,7 @@ public class handRecognition : MonoBehaviour
 
 
         PokerHand.Sort((x, y) => x.CardRank.CompareTo(y.CardRank));
+        PokerHand.Sort((x, y) => x.CardSuit.CompareTo(y.CardSuit));
         //Search for pair, three of a kind, four-of-a-kind, two pair, and full house, which each can take the full hand.
         if (RoyalFlushCheck(PokerHand.ToArray()))
         {
