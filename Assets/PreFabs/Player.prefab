@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 2082780766840011203}
   - component: {fileID: 2082780766840011202}
   - component: {fileID: 2083938276320776504}
-  - component: {fileID: 7256323674140635731}
+  - component: {fileID: 8006597759696895227}
+  - component: {fileID: 5459950286040621088}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -115,11 +116,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c339e077028d86d469ac7996bc107d25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  handDisplays: []
   deck: {fileID: 0}
   playCard:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &7256323674140635731
+  handRecognition: {fileID: 0}
+--- !u!114 &8006597759696895227
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -128,9 +131,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2082780766840011197}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9012d4240a4e6204abae34cd36e062b4, type: 3}
+  m_Script: {fileID: 11500000, guid: 0ed611493576f9049a34d228935422dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  file: 
   hand: {fileID: 0}
   playerName: 
   round: 0
@@ -142,6 +146,30 @@ MonoBehaviour:
   raised: 0
   folded: 0
   isAI: 0
+  isTurn: 0
+  isShowdown: 0
+--- !u!114 &5459950286040621088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2082780766840011197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdc0b60bf0914404e8e4e75aa5fb8cb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerName: 
+  playerBronze: 0
+  playerSilver: 0
+  playerGold: 0
+  bronzeText: {fileID: 0}
+  silverText: {fileID: 0}
+  goldText: {fileID: 0}
+  bronzeTracker: 1
+  silverTracker: 1
+  goldTracker: 1
 --- !u!1 &2082780767837629427
 GameObject:
   m_ObjectHideFlags: 0
