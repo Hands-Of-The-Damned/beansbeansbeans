@@ -2194,7 +2194,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1790288090}
+      - m_Target: {fileID: 1790288096}
         m_TargetAssemblyTypeName: Player, Assembly-CSharp
         m_MethodName: subtractBronze
         m_Mode: 3
@@ -3823,7 +3823,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1790288090}
+      - m_Target: {fileID: 1790288096}
         m_TargetAssemblyTypeName: Player, Assembly-CSharp
         m_MethodName: subtractSilver
         m_Mode: 3
@@ -3969,7 +3969,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1790288090}
+      - m_Target: {fileID: 1790288096}
         m_TargetAssemblyTypeName: Player, Assembly-CSharp
         m_MethodName: subtractGold
         m_Mode: 3
@@ -4951,6 +4951,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9012d4240a4e6204abae34cd36e062b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1790288096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1790288085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdc0b60bf0914404e8e4e75aa5fb8cb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerName: 
+  playerBronze: 10
+  playerSilver: 5
+  playerGold: 3
+  bronzeText: {fileID: 1699371522}
+  silverText: {fileID: 2106889486}
+  goldText: {fileID: 2077585442}
+  bronzeTracker: 0
+  silverTracker: 0
+  goldTracker: 0
 --- !u!114 &1816002302 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2478102091500900557, guid: 52b5076bf3ca26340ae9641f070f9935, type: 3}
