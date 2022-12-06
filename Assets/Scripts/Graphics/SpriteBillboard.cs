@@ -1,3 +1,6 @@
+//Michael "Mickey" Kerr
+//2022
+
 using UnityEngine;
 
 public class SpriteBillboard : MonoBehaviour
