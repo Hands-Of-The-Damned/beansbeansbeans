@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class PlayerControllerPoker : MonoBehaviour
 {
 
     enum states
@@ -108,7 +108,7 @@ public class Player : MonoBehaviour
 
     #region Functions
 
-    public Player()
+    public PlayerControllerPoker()
     {
        
     }
@@ -138,7 +138,14 @@ public class Player : MonoBehaviour
     {
         //send event to UI
         Debug.Log(playerName + " turn");
-        Debug.Log(hand.hand.ToString());
+        foreach(Card x in hand.hand)
+        {
+        Debug.Log(x.CardName);
+        }
+        Debug.Log("bet to match: "+currentBetToMatch);
+        Debug.Log("pot: "+currentPot);
+        Debug.Log("round: "+round);
+        Debug.Log("currency: "+currency);
         state = states.Waiting;
     }
 
@@ -286,10 +293,10 @@ public class Player : MonoBehaviour
             raise = willRaise;
             bet = betAmt;
 
-            player.GetComponent<Player>().setFold(false);
-            player.GetComponent<Player>().setBet(0);
-            player.GetComponent<Player>().setRaised(false);
-            player.GetComponent<Player>().isTurn = false;
+            player.GetComponent<PlayerControllerPoker>().setFold(fold);
+            player.GetComponent<PlayerControllerPoker>().setCurrency(player.GetComponent<PlayerControllerPoker>().currency -bet);
+            player.GetComponent<PlayerControllerPoker>().setRaised(false);
+            player.GetComponent<PlayerControllerPoker>().isTurn = false;
 
         }
     }
@@ -367,7 +374,6 @@ public class Player : MonoBehaviour
         {
             //recive the card
             hand.hand.Add(args.card);
-            Debug.Log(args.card);
         }
     }
 

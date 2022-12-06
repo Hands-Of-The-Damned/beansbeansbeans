@@ -29,12 +29,12 @@ public class PlayerInfo : MonoBehaviour
 
     private void OnEnable()
     {
-        Player.AskInfo += Player_Ask;
+        PlayerControllerPoker.AskInfo += Player_Ask;
     }
 
     private void OnDisable()
     {
-        Player.AskInfo -= Player_Ask;
+        PlayerControllerPoker.AskInfo -= Player_Ask;
     }
 
     #region Functions
@@ -118,7 +118,7 @@ public class PlayerInfo : MonoBehaviour
 
 
 
-    public void Player_Ask(object sender, Player.AskForInfo args) 
+    public void Player_Ask(object sender, PlayerControllerPoker.AskForInfo args) 
     {
         string file = checkFile(args.file);
         string saveString = File.ReadAllText(file);

@@ -98,7 +98,6 @@ public class Deck : MonoBehaviour
         dealtHand = deck.GetRange(0, numToDeal).ToArray();
  //           deckLocation++;
         deck.RemoveRange(0, numToDeal);
-
         return dealtHand;
     }
 

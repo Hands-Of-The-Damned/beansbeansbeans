@@ -247,6 +247,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 778731871}
     - target: {fileID: 6269587541843262758, guid: 8a3fdc8a5a8093c4fb7aeac4624a1e7d, type: 3}
+      propertyPath: currency
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6269587541843262758, guid: 8a3fdc8a5a8093c4fb7aeac4624a1e7d, type: 3}
+      propertyPath: playerName
+      value: npc1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6269587541843262758, guid: 8a3fdc8a5a8093c4fb7aeac4624a1e7d, type: 3}
       propertyPath: thisPlayer
       value: 
       objectReference: {fileID: 569052150}
@@ -329,6 +337,7 @@ MonoBehaviour:
   playCard:
     m_PersistentCalls:
       m_Calls: []
+  handRecognition: {fileID: 0}
 --- !u!1 &896760056 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2082780766840011197, guid: 52b5076bf3ca26340ae9641f070f9935, type: 3}
@@ -358,6 +367,14 @@ PrefabInstance:
       propertyPath: hand
       value: 
       objectReference: {fileID: 1208354520}
+    - target: {fileID: 6269587541843262758, guid: 8a3fdc8a5a8093c4fb7aeac4624a1e7d, type: 3}
+      propertyPath: currency
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6269587541843262758, guid: 8a3fdc8a5a8093c4fb7aeac4624a1e7d, type: 3}
+      propertyPath: playerName
+      value: npc4
+      objectReference: {fileID: 0}
     - target: {fileID: 6269587541843262758, guid: 8a3fdc8a5a8093c4fb7aeac4624a1e7d, type: 3}
       propertyPath: thisPlayer
       value: 
@@ -441,6 +458,7 @@ MonoBehaviour:
   playCard:
     m_PersistentCalls:
       m_Calls: []
+  handRecognition: {fileID: 0}
 --- !u!1001 &1285135584
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -460,6 +478,14 @@ PrefabInstance:
       propertyPath: hand
       value: 
       objectReference: {fileID: 1710162607}
+    - target: {fileID: 6269587541843262758, guid: 8a3fdc8a5a8093c4fb7aeac4624a1e7d, type: 3}
+      propertyPath: currency
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6269587541843262758, guid: 8a3fdc8a5a8093c4fb7aeac4624a1e7d, type: 3}
+      propertyPath: playerName
+      value: npc3
+      objectReference: {fileID: 0}
     - target: {fileID: 6269587541843262758, guid: 8a3fdc8a5a8093c4fb7aeac4624a1e7d, type: 3}
       propertyPath: thisPlayer
       value: 
@@ -603,6 +629,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1445079756}
     - target: {fileID: 7256323674140635731, guid: 52b5076bf3ca26340ae9641f070f9935, type: 3}
+      propertyPath: currency
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256323674140635731, guid: 52b5076bf3ca26340ae9641f070f9935, type: 3}
+      propertyPath: playerName
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256323674140635731, guid: 52b5076bf3ca26340ae9641f070f9935, type: 3}
       propertyPath: thisPlayer
       value: 
       objectReference: {fileID: 896760056}
@@ -638,6 +672,14 @@ PrefabInstance:
       propertyPath: hand
       value: 
       objectReference: {fileID: 1541411579}
+    - target: {fileID: 6269587541843262758, guid: 8a3fdc8a5a8093c4fb7aeac4624a1e7d, type: 3}
+      propertyPath: currency
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6269587541843262758, guid: 8a3fdc8a5a8093c4fb7aeac4624a1e7d, type: 3}
+      propertyPath: playerName
+      value: npc2
+      objectReference: {fileID: 0}
     - target: {fileID: 6269587541843262758, guid: 8a3fdc8a5a8093c4fb7aeac4624a1e7d, type: 3}
       propertyPath: thisPlayer
       value: 
@@ -721,6 +763,7 @@ MonoBehaviour:
   playCard:
     m_PersistentCalls:
       m_Calls: []
+  handRecognition: {fileID: 0}
 --- !u!1 &1710162601 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3993642754945431234, guid: 8a3fdc8a5a8093c4fb7aeac4624a1e7d, type: 3}
@@ -742,6 +785,7 @@ MonoBehaviour:
   playCard:
     m_PersistentCalls:
       m_Calls: []
+  handRecognition: {fileID: 0}
 --- !u!1 &1967341976
 GameObject:
   m_ObjectHideFlags: 0
