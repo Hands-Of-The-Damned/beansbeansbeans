@@ -12,7 +12,9 @@ GameObject:
   - component: {fileID: 5118352329173753695}
   - component: {fileID: 6984235413839883157}
   - component: {fileID: 8587635217668675820}
-  m_Layer: 0
+  - component: {fileID: 3362947252979199880}
+  - component: {fileID: 1983639982550657779}
+  m_Layer: 6
   m_Name: ArcanaCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -157,3 +159,28 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 79f20947c1a3e7048a436053625182ed, type: 2}
   - {fileID: 2100000, guid: a0e1bf51174ad21459b7833a97a47913, type: 2}
   - {fileID: 2100000, guid: ff61c68f3bd8cd04aad9100b1f2ae473, type: 2}
+--- !u!65 &3362947252979199880
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8929513719756393024}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.012449352, y: 0.001, z: 0.01840408}
+  m_Center: {x: 0, y: 0.00024999998, z: 0}
+--- !u!114 &1983639982550657779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8929513719756393024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02d41b3ef00deab449872789e2f6931c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
