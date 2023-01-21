@@ -1647,6 +1647,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 578188979}
   m_CullTransparentMesh: 1
+--- !u!1 &581474400 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 57792b0e10f377145bf071cede6dee4a, type: 3}
+  m_PrefabInstance: {fileID: 1681374564}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &581474402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581474400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c44c3682f24bc343aad8e577a3e63a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &647963207 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8117687503734886650, guid: 6b57a165018bac546b927af58eb08dce, type: 3}
@@ -1745,7 +1762,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 697739629}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 401.18134, y: 223.2722, z: -18.524292}
+  m_LocalPosition: {x: 401.18134, y: 223.296, z: -18.524292}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4362,7 +4379,7 @@ MonoBehaviour:
     m_Bits: 64
   dragSpeed: 1
   height: 0.16
-  cardSize: {x: 20, y: 20}
+  cardSize: {x: 0.012, y: 0.001}
 --- !u!1 &1743481429
 GameObject:
   m_ObjectHideFlags: 0
@@ -5651,7 +5668,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8856777271717631121, guid: 9a16a356dd2687648acb833b3b887ad5, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.17519073
+      value: 0.17519072
       objectReference: {fileID: 0}
     - target: {fileID: 8856777271717631121, guid: 9a16a356dd2687648acb833b3b887ad5, type: 3}
       propertyPath: m_LocalRotation.x
@@ -5659,7 +5676,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8856777271717631121, guid: 9a16a356dd2687648acb833b3b887ad5, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.9845345
+      value: 0.98453456
       objectReference: {fileID: 0}
     - target: {fileID: 8856777271717631121, guid: 9a16a356dd2687648acb833b3b887ad5, type: 3}
       propertyPath: m_LocalRotation.z
