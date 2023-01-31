@@ -34,7 +34,10 @@ public sealed class CardDrag : MonoBehaviour, IDrag
     public void OnEndDrag(Vector3 position, IDrop droppable)
     {
         if (droppable is { IsDroppable: true } && droppable.AcceptDrop(this) == true)
-            transform.position = new Vector3(transform.position.x, position.y, transform.position.z);
+        {
+            float yDrop = position.y + 0.1f;
+            transform.position = new Vector3(transform.position.x, yDrop, transform.position.z);
+        }
         else
             transform.position = dragOriginPosition;
     }
