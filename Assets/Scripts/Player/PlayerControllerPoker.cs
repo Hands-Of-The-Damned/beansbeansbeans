@@ -30,7 +30,7 @@ public class PlayerControllerPoker : MonoBehaviour
 
     private void Awake()
     {
-        Ask(gameObject, file);
+        //Ask(gameObject, file);
     }
     private void Start()
     {
