@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8587635217668675820}
   - component: {fileID: 3362947252979199880}
   - component: {fileID: 1983639982550657779}
+  - component: {fileID: 8906149442280792272}
   m_Layer: 6
   m_Name: ArcanaCard
   m_TagString: Untagged
@@ -184,3 +185,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02d41b3ef00deab449872789e2f6931c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8906149442280792272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8929513719756393024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f64ea1480f04060429a758df00f7e45d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pitchForce: 20
+  pitchMinAngle: -45
+  pitchMaxAngle: 45
+  rollForce: 20
+  rollMinAngle: -45
+  rollMaxAngle: 45
+  restTime: 1
