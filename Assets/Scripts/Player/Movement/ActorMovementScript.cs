@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class ActorMovementScript : MonoBehaviour
 {
+    public float moveSpeed;
+
+    public Transform playerOrientation;
+
+
     // Start is called before the first frame update
     void Start()
     {
