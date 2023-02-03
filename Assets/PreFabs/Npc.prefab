@@ -43,8 +43,6 @@ GameObject:
   - component: {fileID: 2820380059637006648}
   - component: {fileID: 5006432600960010596}
   - component: {fileID: 7137911398804562497}
-  - component: {fileID: 7966525026777742054}
-  - component: {fileID: 6269587541843262758}
   m_Layer: 0
   m_Name: Npc
   m_TagString: Untagged
@@ -133,41 +131,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7966525026777742054
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3993642754945431234}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8372be03042cbfe44b86be822f6a5ee3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6269587541843262758
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3993642754945431234}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9012d4240a4e6204abae34cd36e062b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hand: {fileID: 0}
-  playerName: 
-  round: 0
-  currentBetToMatch: 0
-  currentPot: 0
-  bet: 0
-  currency: 0
-  playedArcanaThisRound: 0
-  raised: 0
-  folded: 0
-  isAI: 0
 --- !u!1 &6348625347845658931
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,77 +5,112 @@ using UnityEngine;
 public class PlayerControllerPoker : MonoBehaviour
 {
 
-    enum states
+    enum States
     {
         Waiting,
         PlayHand
     }
 
+    #region Properties
+
     public string file;
     public playerHand hand;
-    public string playerName;
-    public int round;
-    public int currentBetToMatch;
-    public int currentPot;
-    public int bet;
-    public int currency;
-    public bool playedArcanaThisRound;
-    public bool raised;
-    public bool folded;
-    public bool isAI;
-    public bool isTurn;
-    public bool isShowdown;
-    states state;
 
+    public string PlayerName { get; set; }
+    public int CurrentBetToMatch { get; set; } = 0;
+    public int CurrentPot { get; set; } = 0;
+    public bool PlayedArcanaThisRound { get; set; } = false;
+    public bool Raised { get; set; } = false;
+    public bool Folded { get; set; } = false;
+    public bool IsAI { get;  set; }
+    public bool IsTurn { get; set; } = false;
+    public bool IsShowdown { get; set; } = false;
+    public PokerGameData PokerGameData { get; set; }
 
-    private void Awake()
+    States state = States.Waiting;
+
+    public int Currency
     {
-        //Ask(gameObject, file);
+        get => Currency;
+        set
+        {
+            if (Currency - value > 0)
+            {
+                Currency -= value;
+            }
+        }
     }
-    private void Start()
+
+    public int Round
     {
-        state = states.Waiting;
-        round = 0;
-        currentBetToMatch = 0;
-        currentPot = 0;
-        playedArcanaThisRound = false;
-        raised = false;
-        folded = false;
-        isTurn = false;
-        isShowdown = false;
+        get => Round;
+        set
+        {
+            if (value != Round)
+            {
+                PlayedArcanaThisRound = false;
+            }
+            Round = value;
+        }
     }
+
+    public int Bet
+    {
+        get => Bet;
+        set
+        {
+            if (Bet == 0 && value < 0)
+            {
+                Bet = 0;
+            }
+            else
+            {
+                Bet = value;
+            }
+            if (Bet > CurrentBetToMatch)
+            {
+                Raised = true;
+            }
+            else
+            {
+                Raised = false;
+            }
+        }
+    }
+
+    #endregion
 
     private void Update()
     {
-        checkState();
-        if (Input.GetKeyDown(KeyCode.F) && isTurn)
+        CheckState();
+        if (Input.GetKeyDown(KeyCode.F) && IsTurn)
         {
-            setFold(!folded);
-            Debug.Log(playerName + " fold " + folded);
+            Folded = !Folded;
+            Debug.Log(PlayerName + " fold " + Folded);
         }
-        if (Input.GetKeyDown(KeyCode.UpArrow) && isTurn)
+        if (Input.GetKeyDown(KeyCode.UpArrow) && IsTurn)
         {
-            setBet(bet += 1);
-            Debug.Log(playerName + " bet " + bet);
+            Bet += 1;
+            Debug.Log(PlayerName + " bet " + Bet);
         }
-        if (Input.GetKeyDown(KeyCode.DownArrow) && isTurn)
+        if (Input.GetKeyDown(KeyCode.DownArrow) && IsTurn)
         {
-            setBet(bet -= 1);
-            Debug.Log(playerName + " bet " + bet);
+            Bet -= 1;
+            Debug.Log(PlayerName + " bet " + Bet);
         }
-        if (Input.GetKeyDown(KeyCode.C) && isTurn)
+        if (Input.GetKeyDown(KeyCode.C) && IsTurn)
         {
-            setBet(currentBetToMatch);
-            Debug.Log(playerName + " bet "+bet);
+            Bet = CurrentBetToMatch;
+            Debug.Log(PlayerName + " bet "+Bet);
         }
-        if (Input.GetKeyDown(KeyCode.Space) && isTurn)
+        if (Input.GetKeyDown(KeyCode.Space) && IsTurn)
         {
-            playHand();
-            Debug.Log(playerName + " ended turn");
+            PlayHand();
+            Debug.Log(PlayerName + " ended turn");
         }
-        if (Input.GetKeyDown(KeyCode.Space) && isShowdown)
+        if (Input.GetKeyDown(KeyCode.Space) && IsShowdown)
         {
-            isShowdown = false;
+            IsShowdown = false;
             SendShowDownResponse();
         }
     }
@@ -86,9 +121,9 @@ public class PlayerControllerPoker : MonoBehaviour
         GameStates.BettingRoundInfo += GameStates_BettingRoundInfo;
         GameStates.BigBlind += GameStates_BigBlindBetEvent;
         GameStates.SmallBlind += GameStates_SmallBlindBetEvent;
-        GameStates.NewHand += GameStates_NewHand;
+        GameStates.NewHandEvent += GameStates_NewHand;
         PlayerInfo.SendPlayer += PlayerInfo_PlayerInfo;
-        GameStates.ShowDown += GameStates_Showdown;
+        GameStates.ShowDownEvents += GameStates_Showdown;
     }
 
     public void OnDisable()
@@ -97,13 +132,11 @@ public class PlayerControllerPoker : MonoBehaviour
         GameStates.BettingRoundInfo -= GameStates_BettingRoundInfo;
         GameStates.BigBlind -= GameStates_BigBlindBetEvent;
         GameStates.SmallBlind -= GameStates_SmallBlindBetEvent;
-        GameStates.NewHand -= GameStates_NewHand;
+        GameStates.NewHandEvent -= GameStates_NewHand;
         PlayerInfo.SendPlayer -= PlayerInfo_PlayerInfo;
-        GameStates.ShowDown += GameStates_Showdown;
+        GameStates.ShowDownEvents += GameStates_Showdown;
 
     }
-
-
 
 
     #region Functions
@@ -114,15 +147,15 @@ public class PlayerControllerPoker : MonoBehaviour
     }
 
 
-    public void checkState()
+    public void CheckState()
     {
         switch (state)
         {
-            case states.Waiting:
+            case States.Waiting:
                 break;
 
-            case states.PlayHand:
-                playerTurn();
+            case States.PlayHand:
+                PlayerTurn();
                 break;
 
             default:
@@ -134,137 +167,28 @@ public class PlayerControllerPoker : MonoBehaviour
    /// <summary>
    /// Call UI to enable buttons and let player conduct their turn
    /// </summary>
-    public void playerTurn()
+    public void PlayerTurn()
     {
         //send event to UI
-        Debug.Log(playerName + " turn");
+        Debug.Log(PlayerName + " turn");
         foreach(Card x in hand.hand)
         {
         Debug.Log(x.CardName);
         }
-        Debug.Log("bet to match: "+currentBetToMatch);
-        Debug.Log("pot: "+currentPot);
-        Debug.Log("round: "+round);
-        Debug.Log("currency: "+currency);
-        state = states.Waiting;
-    }
-
-
-    #region Helperfunctions
-
-    public void setName(string name)
-    {
-        playerName = name;
-    }
-
-    /// <summary>
-    /// Set the AI bool using parameter
-    /// </summary>
-    /// <param name="x"></param>
-    public void setAI(bool x)
-    {
-        isAI = x;
-    }
-
-
-    /// <summary>
-    /// Set the folded bool with parameter
-    /// </summary>
-    /// <param name="x"></param>
-    public void setFold(bool x)
-    {
-        folded = x;
-    }
-
-    /// <summary>
-    /// Set the bet to an amount using parameter
-    /// </summary>
-    /// <param name="x"></param>
-    public void setBet(int x)
-    {
-        if(bet == 0 && x < 0)
-        {
-            bet = 0;
-        }
-        else
-        {
-        bet = x;
-        }
-        if(bet > currentBetToMatch)
-        {
-            raised = true;
-        }
-        else
-        {
-            raised = false;
-        }
-    }
-
-    /// <summary>
-    /// Set the players currency amount using parameter
-    /// </summary>
-    /// <param name="x"></param>
-    public void setCurrency(int x)
-    {
-        currency = x;
-    }
-
-    /// <summary>
-    /// Set the raised bool using parameter
-    /// </summary>
-    /// <param name="x"></param>
-    public void setRaised(bool x)
-    {
-        raised = x;
-    }
-
-
-    /// <summary>
-    /// Check if the game and player are in the same round of game play
-    /// if not, reset the played arcana bool, updates the round
-    /// </summary>
-    /// <param name="incomingRound"></param>
-    public void checkCurrentRound(int incomingRound)
-    {
-        if (incomingRound != round)
-        {
-            playedArcanaThisRound = false;
-        }
-        round = incomingRound;
+        Debug.Log("bet to match: "+CurrentBetToMatch);
+        Debug.Log("pot: "+ CurrentPot);
+        Debug.Log("round: "+ Round);
+        Debug.Log("currency: "+Currency);
+        state = States.Waiting;
     }
 
     /// <summary>
     /// Reply to the Game with round decision
     /// </summary>
-    public void playHand()
+    public void PlayHand()
     {
-        if (folded)
-        {
-            SendRoundInfo(gameObject, folded, raised, bet);
-        }
-        else if (raised)
-        {
-            SendRoundInfo(gameObject, folded, raised, bet);
-        }
-        else
-        {
-            SendRoundInfo(gameObject, folded, raised, bet);
-        }
+        SendRoundInfo(this, Folded, Raised, Bet);
     }
-
-    /// <summary>
-    /// Deduct blind bet from players currency
-    /// </summary>
-    /// <param name="blindAmt"></param>
-    public void blindBet(int blindAmt)
-    {
-        if (currency - blindAmt > 0)
-        {
-            currency -= blindAmt;
-        }
-    }
-    #endregion
-
     #endregion
 
 
@@ -279,33 +203,33 @@ public class PlayerControllerPoker : MonoBehaviour
      * Send player bet ammount, player fold bool, bool raise
      */
 
-    public class SendRoundDecision
+    public class RoundDecisionEventArgs
     {
         public bool fold;
         public bool raise;
         public int bet;
-        public GameObject thisPlayer;
+        public PlayerControllerPoker thisPlayer;
 
-        public SendRoundDecision(GameObject player, bool didFold, bool willRaise, int betAmt)
+        public RoundDecisionEventArgs(PlayerControllerPoker player, bool didFold, bool willRaise, int betAmt)
         {
             thisPlayer = player;
             fold = didFold;
             raise = willRaise;
             bet = betAmt;
 
-            player.GetComponent<PlayerControllerPoker>().setFold(fold);
-            player.GetComponent<PlayerControllerPoker>().setCurrency(player.GetComponent<PlayerControllerPoker>().currency -bet);
-            player.GetComponent<PlayerControllerPoker>().setRaised(false);
-            player.GetComponent<PlayerControllerPoker>().isTurn = false;
+            player.Folded = fold;
+            player.Currency -= bet;
+            player.Raised = false;
+            player.IsTurn = false;
 
         }
     }
 
-    public static event System.EventHandler<SendRoundDecision> RoundInfo;
+    public static event System.EventHandler<RoundDecisionEventArgs> RoundInfo;
 
-    public void SendRoundInfo(GameObject player, bool didFold, bool isRaise, int betAmt)
+    public void SendRoundInfo(PlayerControllerPoker player, bool didFold, bool isRaise, int betAmt)
     {
-        RoundInfo?.Invoke(this, new SendRoundDecision(player, didFold, isRaise, betAmt));
+        RoundInfo?.Invoke(this, new RoundDecisionEventArgs(player, didFold, isRaise, betAmt));
     }
 
 
@@ -314,19 +238,19 @@ public class PlayerControllerPoker : MonoBehaviour
      * Respond to showdown
      */
 
-    public class ShowDownResponse
+    public class ShowDownResponseEventArgs
     {
-        public ShowDownResponse()
+        public ShowDownResponseEventArgs()
         {
 
         }
     }
 
-    public static event System.EventHandler<ShowDownResponse> ShowDown;
+    public static event System.EventHandler<ShowDownResponseEventArgs> ShowDown;
 
     public void SendShowDownResponse()
     {
-        ShowDown?.Invoke(this, new ShowDownResponse());
+        ShowDown?.Invoke(this, new ShowDownResponseEventArgs());
     }
 
 
@@ -335,22 +259,22 @@ public class PlayerControllerPoker : MonoBehaviour
      * Ask the data base for this players info
      */
 
-    public class AskForInfo
+    public class AskForInfoEventArgs
     {
         public string file;
         public GameObject player;
-        public AskForInfo(GameObject thisPlayer, string playerFile)
+        public AskForInfoEventArgs(GameObject thisPlayer, string playerFile)
         {
             file = playerFile;
             player = thisPlayer;
         }
     }
 
-    public static event System.EventHandler<AskForInfo> AskInfo;
+    public static event System.EventHandler<AskForInfoEventArgs> AskInfo;
 
     public void Ask(GameObject player, string playerFile)
     {
-        AskInfo?.Invoke(this, new AskForInfo(player, playerFile));
+        AskInfo?.Invoke(this, new AskForInfoEventArgs(player, playerFile));
     }
 
 
@@ -382,11 +306,11 @@ public class PlayerControllerPoker : MonoBehaviour
         if (args.player == gameObject)
         {
             //Recive round info and let this player play their hand
-            currentBetToMatch = args.currentBet;
-            currentPot = args.currentPot;
-            checkCurrentRound(args.currentRound);
-            isTurn = true;
-            state = states.PlayHand;
+            CurrentBetToMatch = args.currentBet;
+            CurrentPot = args.currentPot;
+            Round = (args.currentRound);
+            IsTurn = true;
+            state = States.PlayHand;
         }
     }
 
@@ -395,7 +319,7 @@ public class PlayerControllerPoker : MonoBehaviour
     {
         if (args.player == gameObject)
         {
-            blindBet(args.bet);
+            Bet = (args.bet);
         }
     }
 
@@ -403,11 +327,11 @@ public class PlayerControllerPoker : MonoBehaviour
     {
         if (args.player == gameObject)
         {
-            blindBet(args.bet);
+            Bet = (args.bet);
         }
     }
 
-    public void GameStates_NewHand(object sender, GameStates.NewHandEvent args)
+    public void GameStates_NewHand(object sender, GameStates.NewHandEventArgs args)
     {
         hand.hand.Clear();
     }
@@ -427,15 +351,15 @@ public class PlayerControllerPoker : MonoBehaviour
     {
         if(args.player == gameObject)
         {
-            setName(args.playerName);
-            setAI(args.playerIsAI);
-            setCurrency(args.playerCurrency);
+            name = args.playerName;
+            IsAI = args.playerIsAI;
+            Currency = args.playerCurrency;
         }
     }
 
-    public void GameStates_Showdown(object sender, GameStates.ShowDownEvent args)
+    public void GameStates_Showdown(object sender, GameStates.ShowDownEventArgs args)
     {
-        isShowdown = true;
+        IsShowdown = true;
     }
 
 

@@ -118,7 +118,7 @@ public class PlayerInfo : MonoBehaviour
 
 
 
-    public void Player_Ask(object sender, PlayerControllerPoker.AskForInfo args) 
+    public void Player_Ask(object sender, PlayerControllerPoker.AskForInfoEventArgs args) 
     {
         string file = checkFile(args.file);
         string saveString = File.ReadAllText(file);
