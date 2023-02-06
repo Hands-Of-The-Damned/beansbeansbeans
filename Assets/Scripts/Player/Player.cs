@@ -30,9 +30,9 @@ public class Player : MonoBehaviour
         playerSilver = 10;
         playerGold = 3;
 
-        bronzeText.text = "Bronze:" + playerBronze.ToString();
-        silverText.text = "Silver:" + playerSilver.ToString();
-        goldText.text = "Gold:" + playerGold.ToString();
+        if (bronzeText != null) { bronzeText.text = "Bronze:" + playerBronze.ToString(); }
+        if (silverText != null) { silverText.text = "Silver:" + playerSilver.ToString(); }
+        if (goldText != null) { goldText.text = "Gold:" + playerGold.ToString(); }
    
     }
     public void addBronze(int bronzeToAdd)

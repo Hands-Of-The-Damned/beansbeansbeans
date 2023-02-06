@@ -47,37 +47,37 @@ public class PlayerControllerPoker : MonoBehaviour
 
     private void Update()
     {
-        checkState();
-        if (Input.GetKeyDown(KeyCode.F) && isTurn)
-        {
-            setFold(!folded);
-            Debug.Log(playerName + " fold " + folded);
-        }
-        if (Input.GetKeyDown(KeyCode.UpArrow) && isTurn)
-        {
-            setBet(bet += 1);
-            Debug.Log(playerName + " bet " + bet);
-        }
-        if (Input.GetKeyDown(KeyCode.DownArrow) && isTurn)
-        {
-            setBet(bet -= 1);
-            Debug.Log(playerName + " bet " + bet);
-        }
-        if (Input.GetKeyDown(KeyCode.C) && isTurn)
-        {
-            setBet(currentBetToMatch);
-            Debug.Log(playerName + " bet "+bet);
-        }
-        if (Input.GetKeyDown(KeyCode.Space) && isTurn)
-        {
-            playHand();
-            Debug.Log(playerName + " ended turn");
-        }
-        if (Input.GetKeyDown(KeyCode.Space) && isShowdown)
-        {
-            isShowdown = false;
-            SendShowDownResponse();
-        }
+        //checkState();
+        //if (Input.GetKeyDown(KeyCode.F) && isTurn)
+        //{
+        //    setFold(!folded);
+        //    Debug.Log(playerName + " fold " + folded);
+        //}
+        //if (Input.GetKeyDown(KeyCode.UpArrow) && isTurn)
+        //{
+        //    setBet(bet += 1);
+        //    Debug.Log(playerName + " bet " + bet);
+        //}
+        //if (Input.GetKeyDown(KeyCode.DownArrow) && isTurn)
+        //{
+        //    setBet(bet -= 1);
+        //    Debug.Log(playerName + " bet " + bet);
+        //}
+        //if (Input.GetKeyDown(KeyCode.C) && isTurn)
+        //{
+        //    setBet(currentBetToMatch);
+        //    Debug.Log(playerName + " bet "+bet);
+        //}
+        //if (Input.GetKeyDown(KeyCode.Space) && isTurn)
+        //{
+        //    playHand();
+        //    Debug.Log(playerName + " ended turn");
+        //}
+        //if (Input.GetKeyDown(KeyCode.Space) && isShowdown)
+        //{
+        //    isShowdown = false;
+        //    SendShowDownResponse();
+        //}
     }
 
     public void OnEnable()
@@ -198,6 +198,7 @@ public class PlayerControllerPoker : MonoBehaviour
         {
             raised = false;
         }
+        Debug.Log("Bet is now" + bet);
     }
 
     /// <summary>
@@ -363,7 +364,7 @@ public class PlayerControllerPoker : MonoBehaviour
 
     /*________________Event Handles__________________*/
 
-    public void GameStats_PlayerStats()
+    public void GameStates_PlayerStats()
     {
         //recive the players stats and set all relevent variables
     }

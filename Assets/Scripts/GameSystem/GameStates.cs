@@ -157,7 +157,7 @@ public class GameStates : MonoBehaviour
                 break;
 
             case states.WaitForPlayer:
-                Debug.Log("Gamestate: wait");
+                //Debug.Log("Gamestate: wait");
                 break;
 
             case states.Showdown:
