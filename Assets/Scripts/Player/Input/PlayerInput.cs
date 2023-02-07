@@ -30,6 +30,7 @@ public class PlayerInput : ActorInput
     public UnityEvent checkEvent;
     public UnityEvent showdownEvent;
     public UnityEvent endTurnEvent;
+    public UnityEvent endTurnFailEvent;
     public UnityEvent playCardEvent;
     #endregion
 
@@ -54,7 +55,7 @@ public class PlayerInput : ActorInput
             if (Input.GetKeyDown(KeyCode.F))
             {
                 //may be a good idea to prompt player
-                actorController.setFold(true);
+                actorFold();
             }
 
             if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -90,7 +91,7 @@ public class PlayerInput : ActorInput
         if (confirmFold())
         {
             foldEvent.Invoke();
-            actorController.setFold(true);
+            actorController.flipFold();
         }
     }
 
@@ -127,7 +128,7 @@ public class PlayerInput : ActorInput
         }
 
         //enough money for bet?
-        if (currentMoney + numberAddedToBet < 0)
+        if (currentMoney - numberAddedToBet < 0)
         {
             //not enough money...
             //event to display to player that they are broke, lmao
@@ -145,6 +146,12 @@ public class PlayerInput : ActorInput
     public override void endTurn()
     {
         Debug.Log("Ending " + actorController.playerName + "'s turn!");
+        //Logic to make sure that they are doing something legal.
+        if(actorController.currentBetToMatch > actorController.bet && actorController.folded == false)
+        {
+            Debug.Log("Can't end turn, you have not folded, and your bet is lower than the bet to match.");
+            endTurnFailEvent.Invoke();
+        }
         //showdown turn
         if (actorController.isShowdown)
         {

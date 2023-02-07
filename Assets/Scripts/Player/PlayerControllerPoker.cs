@@ -177,6 +177,14 @@ public class PlayerControllerPoker : MonoBehaviour
     }
 
     /// <summary>
+    /// Literally flip the current state of the folded variable.
+    /// </summary>
+    public void flipFold()
+    {
+        folded = !folded;
+    }
+
+    /// <summary>
     /// Set the bet to an amount using parameter
     /// </summary>
     /// <param name="x"></param>
