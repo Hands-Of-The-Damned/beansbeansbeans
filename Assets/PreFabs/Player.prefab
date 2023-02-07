@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2083938276320776504}
   - component: {fileID: 8006597759696895227}
   - component: {fileID: 5459950286040621088}
+  - component: {fileID: 3241020218095364247}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -170,6 +171,47 @@ MonoBehaviour:
   bronzeTracker: 1
   silverTracker: 1
   goldTracker: 1
+--- !u!114 &3241020218095364247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2082780766840011197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbfefd3587b96094db2fb1f2b90d1a7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actorController: {fileID: 0}
+  noConfirmAll: 1
+  noConfirmFold: 0
+  noConfirmEndTurn: 0
+  noConfirmPlayCard: 0
+  betFailEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  foldEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  addToBetEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  negToBetEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  checkEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  showdownEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  endTurnEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  playCardEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2082780767837629427
 GameObject:
   m_ObjectHideFlags: 0

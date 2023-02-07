@@ -715,6 +715,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3241020218095364247, guid: 52b5076bf3ca26340ae9641f070f9935, type: 3}
+      propertyPath: checkEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 569052150}
     - target: {fileID: 7256323674140635731, guid: 52b5076bf3ca26340ae9641f070f9935, type: 3}
       propertyPath: file
       value: player
@@ -760,59 +764,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c339e077028d86d469ac7996bc107d25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1445079763
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 896760056}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cbfefd3587b96094db2fb1f2b90d1a7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  actorController: {fileID: 0}
-  noConfirmAll: 1
-  noConfirmFold: 0
-  noConfirmEndTurn: 0
-  noConfirmPlayCard: 0
-  betFailEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  foldEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  addToBetEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  negToBetEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  checkEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 569052150}
-        m_TargetAssemblyTypeName: UnityEngine.Object, UnityEngine
-        m_MethodName: set_name
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: jonathon
-          m_BoolArgument: 0
-        m_CallState: 2
-  showdownEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  endTurnEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  playCardEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1001 &1541411572
 PrefabInstance:
   m_ObjectHideFlags: 0

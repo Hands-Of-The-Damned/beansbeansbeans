@@ -10,6 +10,7 @@ public class ActorInput : MonoBehaviour
     #region PublicGlobalVars
 
     public PlayerControllerPoker actorController;
+    public playerHand playerHand;
 
     #endregion
 
@@ -19,7 +20,7 @@ public class ActorInput : MonoBehaviour
         actorController = gameObject.GetComponent<PlayerControllerPoker>();
     }
 
-    //Just fold
+    //Just fold. If you wish to end turn, this must be specified
     public virtual void actorFold()
     {
         actorController.setFold(true);
